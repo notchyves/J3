@@ -13,6 +13,8 @@ window::window(const HINSTANCE instance, const std::wstring& title, const vector
 }
 
 void window::finish_create(const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size) {
+    // TODO: AdjustWindowRectEx
+    
     handle = CreateWindowEx(
         WS_EX_APPWINDOW,
         WINDOW_CLASS_NAME,
@@ -31,11 +33,17 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
     if (handle == nullptr) {
         // handle error
     }
+
+    renderer.initialize(handle, size); // hardware accelerated by default
 }
 
 void window::show() const {
     ShowWindow(handle, SW_SHOW);
     UpdateWindow(handle);
+}
+
+void window::update() {
+    renderer.render_frame();
 }
 
 void window::close() {

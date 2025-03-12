@@ -39,18 +39,31 @@ void application::run() {
         // handle error
     }
 
+    running = true;
+
     const auto& main_window = get_main_window();
     main_window->show();
 
     // window loop
     MSG message;
-    do {
-        if (!GetMessage(&message, nullptr, 0, 0)) continue;
+    while (running) {
+        while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) {
+            TranslateMessage(&message);
+            DispatchMessage(&message);
 
-        TranslateMessage(&message);
-        DispatchMessage(&message);
+            if (message.message == WM_QUIT) {
+                running = false;
+                break;
+            }
+        }
+
+        // perform updates during dead time
+        for (const auto& window : windows) {
+            window->update();
+        }
+
+        // TODO: run a timer before updating
     }
-    while (message.message != WM_QUIT);
 }
 
 void application::quit() {

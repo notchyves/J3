@@ -2,9 +2,9 @@
 
 // windows related includes
 #include <Windows.h>
-#include <d2d1_3.h>
-#include <dwrite_3.h>
+#include <d3d11.h>
 #include <dxgi1_4.h>
+#include <winrt/windows.foundation.h>
 
 // standard includes
 #include <random>

@@ -5,13 +5,9 @@ alignas(jiayi) char jiayi_buffer[sizeof(jiayi)];
 
 jiayi::jiayi(const HINSTANCE instance, const std::wstring& command_line) {
     new(application_buffer) application(instance);
-
     auto& app = application::get();
     
-    app.create_window(L"J3 (main window)", { 800, 600 });
-    app.create_window(L"J3 (sub window)", { 400, 300 }, { 400, 300 });
-    app.create_window(L"J3 (sub window)", { 400, 300 }, { 400, 300 });
-    
+    app.create_window(L"J3", { 900, 550 });
     app.run();
 }
 
