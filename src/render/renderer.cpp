@@ -46,14 +46,29 @@ void renderer::render_frame() {
     this->device_context->PSSetShader(ps.get().get(), nullptr, 0);
 
     // update constant buffer
-    cb_vertex cb;
-    cb.x_offset = 0.0f;
-    cb.y_offset = 0.5f;
+    cb_vertex cb{};
 
-    D3D11_MAPPED_SUBRESOURCE mapped_resource;
-    this->device_context->Map(constant_buffer.get().get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
-    memcpy(mapped_resource.pData, &cb, sizeof(cb));
-    this->device_context->Unmap(constant_buffer.get().get(), 0);
+    matrix world = DirectX::XMMatrixIdentity();
+
+    // // orthographic projection
+    // matrix projection = DirectX::XMMatrixOrthographicOffCenterLH(
+    //     0.0f, this->window_size.x,
+    //     this->window_size.y, 0.0f,
+    //     0.0f, 1.0f
+    // );
+
+    static vector eyes = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+    static vector look = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+    static vector up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    matrix view = DirectX::XMMatrixLookAtLH(eyes, look, up);
+
+    float fov = DirectX::XMConvertToRadians(90.0f);
+    float aspect_ratio = this->window_size.x / this->window_size.y;
+    matrix projection = DirectX::XMMatrixPerspectiveFovLH(fov, aspect_ratio, 0.1f, 1000.0f);
+    
+    cb.mat = world * view * projection;
+    cb.mat = DirectX::XMMatrixTranspose(cb.mat); // to row-major (default in HLSL, more efficient)
+    constant_buffer.edit(device_context, &cb, sizeof(cb));
 
     auto cb_ptr = constant_buffer.get().get();
     this->device_context->VSSetConstantBuffers(0, 1, &cb_ptr);
@@ -217,10 +232,10 @@ void renderer::create_constant_buffers() {
 
 void renderer::initialize_scene() {
     constexpr vertex v[] = {
-        { { -0.5f, -0.5f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
-        { { -0.5f, 0.5f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
-        { { 0.5f, 0.5f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } },
-        { { 0.5f, -0.5f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }
+        { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
+        { { -0.5f, 0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+        { { 0.5f, 0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } },
+        { { 0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }
     };
 
     constexpr DWORD i[] = {

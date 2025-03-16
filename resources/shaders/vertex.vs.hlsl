@@ -1,7 +1,6 @@
 cbuffer CONSTANT_DATA : register(b0)
 {
-    float xOffset;
-    float yOffset;
+    float4x4 mat;
 };
 
 struct VS_INPUT
@@ -20,11 +19,8 @@ struct VS_OUTPUT
 
 VS_OUTPUT main(VS_INPUT input)
 {
-	input.inPos.x += xOffset;
-	input.inPos.y += yOffset;
-
-    VS_OUTPUT output;
-    output.outPos = float4(input.inPos, 1.0f);
+	VS_OUTPUT output;
+    output.outPos = mul(float4(input.inPos, 1.0f), mat);
     output.outColor = input.inColor;
     output.outTexCoord = input.inTexCoord;
     return output;

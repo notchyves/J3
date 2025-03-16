@@ -20,7 +20,7 @@ public:
     }
 
     // specialized function for constant buffers
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<cbuffer, T>>>
+    template <std::derived_from<cbuffer> T>
     void initialize(const winrt::com_ptr<ID3D11Device>& device) {
         CD3D11_BUFFER_DESC desc(static_cast<UINT>(sizeof(T) + (16 - sizeof(T) % 16)),
             D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
@@ -35,6 +35,15 @@ public:
 
     winrt::com_ptr<ID3D11Buffer>& get() {
         return this->buffer;
+    }
+
+    void edit(const winrt::com_ptr<ID3D11DeviceContext>& context, const void* data, const size_t size) const {
+        // calling this function when CPU access is not D3D11_CPU_ACCESS_WRITE is undefined behavior i think
+        
+        D3D11_MAPPED_SUBRESOURCE mapped_resource = { };
+        context->Map(this->buffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+        memcpy(mapped_resource.pData, data, size);
+        context->Unmap(this->buffer.get(), 0);
     }
 
     [[nodiscard]] size_t size() const {
