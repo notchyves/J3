@@ -63,11 +63,11 @@ void application::run() {
         }
 
         // perform updates during dead time
+        time.update();
+
         for (const auto& window : windows) {
             window->update();
         }
-
-        // TODO: run a timer before updating
     }
 }
 

@@ -1,12 +1,11 @@
 #pragma once
 #include "common.hpp"
-#include "render/renderer.hpp"
+#include "system/ecs_manager.hpp"
 
 class window {
 public:
     HWND handle;
     bool main_window;
-    renderer renderer;
 
     window(HINSTANCE instance, const std::wstring& title, vector2 size, bool main_window);
     window(HINSTANCE instance, const std::wstring& title, vector2 position, vector2 size, bool main_window);
@@ -23,4 +22,5 @@ public:
 
 private:
     bool closing;
+    ecs_manager ecs;
 };

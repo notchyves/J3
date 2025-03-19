@@ -1,13 +1,13 @@
 #pragma once
 #include "common.hpp"
+#include "timer.hpp"
 
 #include "window.hpp"
 
 class application {
 public:
-    HINSTANCE instance;
     std::vector<std::unique_ptr<window>> windows;
-    bool running = false;
+    timer time;
     
     explicit application(HINSTANCE instance);
 
@@ -21,6 +21,9 @@ public:
     std::unique_ptr<window>& get_main_window();
     
 private:
+    HINSTANCE instance;
+    bool running = false;
+    
     static LRESULT CALLBACK window_proc(HWND handle, UINT message, WPARAM w_param, LPARAM l_param);
 };
 

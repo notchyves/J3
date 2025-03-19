@@ -8,15 +8,17 @@
 LOAD_RESOURCE(obj_vertex_vs_cso)
 LOAD_RESOURCE(obj_pixel_ps_cso)
 
-LOAD_RESOURCE(resources_textures_peppa_pig_png)
+LOAD_RESOURCE(resources_textures_mart_png)
 
-void renderer::initialize(const HWND handle, const vector2 size, const bool hardware_accelerated) {
+renderer::renderer(const HWND handle, const vector2 size, const bool hardware_accelerated) {
     this->window_handle = handle;
     this->window_size = size;
-    
-    create_device_and_swap_chain(hardware_accelerated);
+    this->hardware_accelerated = hardware_accelerated;
+}
+
+void renderer::initialize() {
+    create_device_and_swap_chain();
     create_render_target();
-    create_depth_stencil();
     set_viewport();
     create_rasterizer();
     create_sampler();
@@ -27,47 +29,52 @@ void renderer::initialize(const HWND handle, const vector2 size, const bool hard
     initialize_scene();
 }
 
+void renderer::update(entt::registry& registry) {
+    // task list:
+    // - check if resizing is needed
+    // - add drawable + render_layer components
+    // - sort entities by render_layer if layout is dirty
+    // - render entities in order
+    
+    render_frame();
+}
+
+void renderer::destroy() {
+    //
+}
+
 void renderer::render_frame() {
     float background[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     this->device_context->ClearRenderTargetView(this->render_target_view.get(), background);
-    this->device_context->ClearDepthStencilView(this->depth_stencil_view.get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     this->device_context->IASetInputLayout(input_layout.get());
     this->device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     this->device_context->RSSetState(rasterizer_state.get());
-    this->device_context->OMSetDepthStencilState(depth_stencil_state.get(), 0);
 
     auto sampler = sampler_state.get();
     this->device_context->PSSetSamplers(0, 1, &sampler);
+
+    // drawing individual objects starts here and ends at Present
     auto texture = a_texture.get();
     this->device_context->PSSetShaderResources(0, 1, &texture);
     this->device_context->VSSetShader(vs.get().get(), nullptr, 0);
     this->device_context->PSSetShader(ps.get().get(), nullptr, 0);
 
     // update constant buffer
-    cb_vertex cb{};
+    cb_vertex cb = { };
 
-    matrix world = DirectX::XMMatrixIdentity();
+    matrix world = DirectX::XMMatrixScaling(200.0f, 200.0f, 1.0f) * DirectX::XMMatrixTranslation(100.0f, 100.0f, 0.0f);
 
-    // // orthographic projection
-    // matrix projection = DirectX::XMMatrixOrthographicOffCenterLH(
-    //     0.0f, this->window_size.x,
-    //     this->window_size.y, 0.0f,
-    //     0.0f, 1.0f
-    // );
-
-    static vector eyes = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
-    static vector look = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-    static vector up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    matrix view = DirectX::XMMatrixLookAtLH(eyes, look, up);
-
-    float fov = DirectX::XMConvertToRadians(90.0f);
-    float aspect_ratio = this->window_size.x / this->window_size.y;
-    matrix projection = DirectX::XMMatrixPerspectiveFovLH(fov, aspect_ratio, 0.1f, 1000.0f);
+    // orthographic projection
+    static matrix projection = DirectX::XMMatrixOrthographicOffCenterLH(
+        0.0f, this->window_size.x,
+        this->window_size.y, 0.0f,
+        0.0f, 1.0f
+    );
     
-    cb.mat = world * view * projection;
-    cb.mat = DirectX::XMMatrixTranspose(cb.mat); // to row-major (default in HLSL, more efficient)
+    cb.mat = world * projection;
+    cb.mat = DirectX::XMMatrixTranspose(cb.mat);
     constant_buffer.edit(device_context, &cb, sizeof(cb));
 
     auto cb_ptr = constant_buffer.get().get();
@@ -82,7 +89,7 @@ void renderer::render_frame() {
     this->swap_chain->Present(1, 0);
 }
 
-void renderer::create_device_and_swap_chain(const bool hardware_accelerated) {
+void renderer::create_device_and_swap_chain() {
     DXGI_SWAP_CHAIN_DESC swap_chain_desc = { };
 
     swap_chain_desc.BufferDesc.Width = this->window_size.x;
@@ -108,7 +115,7 @@ void renderer::create_device_and_swap_chain(const bool hardware_accelerated) {
     
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
         nullptr, // video adapter, pass null to use best available
-        hardware_accelerated ? D3D_DRIVER_TYPE_HARDWARE : D3D_DRIVER_TYPE_WARP, // driver type, either hardware or WARP (software)
+        this->hardware_accelerated ? D3D_DRIVER_TYPE_HARDWARE : D3D_DRIVER_TYPE_WARP, // driver type, either hardware or WARP (software)
         nullptr, // software rasterizer module if driver type is software (WARP is different)
         0, // creation flags, 0 for now
         nullptr, // array of feature levels, null to use default
@@ -137,34 +144,9 @@ void renderer::create_render_target() {
     if (FAILED(hr)) {
         // handle error
     }
-}
 
-void renderer::create_depth_stencil() {
-    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_D24_UNORM_S8_UINT, this->window_size.x, this->window_size.y);
-    desc.MipLevels = 1;
-    desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-    HRESULT hr = this->device->CreateTexture2D(&desc, nullptr, this->depth_stencil_buffer.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
-
-    hr = this->device->CreateDepthStencilView(this->depth_stencil_buffer.get(), nullptr, this->depth_stencil_view.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
-
-    // set render target here instead of in create_render_target
-    ID3D11RenderTargetView* render_target_view = this->render_target_view.get();
-    this->device_context->OMSetRenderTargets(1, &render_target_view, this->depth_stencil_view.get());
-
-    CD3D11_DEPTH_STENCIL_DESC depth_stencil_desc(D3D11_DEFAULT);
-    depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-
-    hr = this->device->CreateDepthStencilState(&depth_stencil_desc, this->depth_stencil_state.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    auto rtv = this->render_target_view.get();
+    this->device_context->OMSetRenderTargets(1, &rtv, nullptr);
 }
 
 void renderer::set_viewport() {
@@ -211,7 +193,7 @@ void renderer::setup_shaders() {
 }
 
 void renderer::load_textures() {
-    resource tex = GET_RESOURCE(resources_textures_peppa_pig_png);
+    resource tex = GET_RESOURCE(resources_textures_mart_png);
     
     HRESULT hr = DirectX::CreateWICTextureFromMemory(
         this->device.get(),
@@ -232,15 +214,15 @@ void renderer::create_constant_buffers() {
 
 void renderer::initialize_scene() {
     constexpr vertex v[] = {
-        { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
-        { { -0.5f, 0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
-        { { 0.5f, 0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } },
-        { { 0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }
+        { { -0.5f, -0.5f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+        { { 0.5f, -0.5f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } },
+        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
+        { { 0.5f, 0.5f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
     };
 
     constexpr DWORD i[] = {
         0, 1, 2,
-        0, 2, 3
+        2, 1, 3
     };
 
     vertex_buffer.initialize(device, v, ARRAYSIZE(v), D3D11_BIND_VERTEX_BUFFER);

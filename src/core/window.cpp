@@ -1,6 +1,7 @@
 #include "window.hpp"
 
 #include "application.hpp" // avoid circular dependency
+#include "system/render/renderer.hpp"
 
 window::window(const HINSTANCE instance, const std::wstring& title, const vector2 size, const bool main_window) {
     this->main_window = main_window;
@@ -42,7 +43,10 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
         // handle error
     }
 
-    renderer.initialize(handle, size); // hardware accelerated by default
+    // add and initialize systems
+    ecs.add_system<renderer>(handle, size); // hardware accelerated by default
+
+    ecs.initialize();
 }
 
 void window::show() const {
@@ -51,7 +55,7 @@ void window::show() const {
 }
 
 void window::update() {
-    renderer.render_frame();
+    ecs.update();
 }
 
 void window::close() {
