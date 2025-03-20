@@ -29,7 +29,7 @@ void renderer::initialize() {
 void renderer::update(entt::registry& registry) {
     // task list:
     // - check if resizing is needed
-    // - add drawable + render_layer components
+    // - add render_layer component
     // - sort entities by render_layer if layout is dirty
     // - render entities in order
     
