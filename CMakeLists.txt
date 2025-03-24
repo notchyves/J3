@@ -86,7 +86,7 @@ add_shaders(SHADER_OUTPUTS ${VERTEX_SHADERS} ${PIXEL_SHADERS})
 
 ### resources
 
-file(GLOB_RECURSE INTERMEDIARIES "obj/*")
+file(GLOB_RECURSE INTERMEDIARIES CONFIGURE_DEPENDS "obj/*")
 
 # all resources except shaders get embedded into the executable
 file(GLOB_RECURSE RESOURCES CONFIGURE_DEPENDS "resources/*")
