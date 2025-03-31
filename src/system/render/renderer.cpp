@@ -49,7 +49,7 @@ void renderer::set_background_color(const vector4 col) {
 }
 
 void renderer::render_frame(entt::registry& registry) {
-    this->device_context->ClearRenderTargetView(this->render_target_view.get(), background_color);
+    this->device_context->ClearRenderTargetView(this->render_target_view.get(), background_color.data());
 
     this->device_context->IASetInputLayout(input_layout.get());
     this->device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
