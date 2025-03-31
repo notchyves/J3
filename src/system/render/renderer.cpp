@@ -23,6 +23,8 @@ void renderer::initialize() {
     create_rasterizer();
     create_sampler();
     create_default_resources();
+
+    set_background_color({ 0.0f, 0.0f, 0.0f, 1.0f });
 }
 
 void renderer::update(entt::registry& registry) {
@@ -39,10 +41,15 @@ void renderer::destroy() {
     //
 }
 
+void renderer::set_background_color(const vector4 col) {
+    background_color[0] = col.x;
+    background_color[1] = col.y;
+    background_color[2] = col.z;
+    background_color[3] = col.w;
+}
+
 void renderer::render_frame(entt::registry& registry) {
-    // TODO: move setting the background to a function perhaps
-    constexpr float background[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    this->device_context->ClearRenderTargetView(this->render_target_view.get(), background);
+    this->device_context->ClearRenderTargetView(this->render_target_view.get(), background_color);
 
     this->device_context->IASetInputLayout(input_layout.get());
     this->device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

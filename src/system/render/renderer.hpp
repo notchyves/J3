@@ -17,16 +17,18 @@ public:
 };
 
 struct renderer {
-    //void initialize(HWND handle, vector2 size, bool hardware_accelerated = true);
     renderer(HWND handle, vector2 size, bool hardware_accelerated = true);
     void initialize();
     void update(entt::registry& registry);
     void destroy();
 
+    void set_background_color(vector4 col);
+
 private:
     HWND window_handle = nullptr;
     vector2 window_size = { 0, 0 };
     bool hardware_accelerated = true; // by default
+    float background_color[4];
     
     winrt::com_ptr<ID3D11Device> device;
     winrt::com_ptr<ID3D11DeviceContext> device_context;
