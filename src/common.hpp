@@ -21,6 +21,7 @@
 #include <memory>
 #include <print>
 #include <mutex>
+#include <array>
 
 // libraries
 #include <entt/entt.hpp>

@@ -11,9 +11,9 @@ application::application(const HINSTANCE instance) {
     }
     
     // get icon because i don't want to load one from a file
-    const auto module_path = new wchar_t[MAX_PATH];
-    GetModuleFileName(this->instance, module_path, MAX_PATH);
-    HICON icon = ExtractIcon(this->instance, module_path, 0);
+    std::array<wchar_t, MAX_PATH> module_path;
+    GetModuleFileName(this->instance, module_path.data(), MAX_PATH);
+    HICON icon = ExtractIcon(this->instance, module_path.data(), 0);
 
     // application owns the window class
     WNDCLASSEXW window_class = {};
@@ -30,9 +30,6 @@ application::application(const HINSTANCE instance) {
     if (atom == 0) {
         // handle error
     }
-
-    // clean up
-    delete[] module_path;
 }
 
 application& application::get() {
