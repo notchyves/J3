@@ -14,6 +14,7 @@ renderer::renderer(const HWND handle, const vector2 size, const bool hardware_ac
     this->window_handle = handle;
     this->window_size = size;
     this->hardware_accelerated = hardware_accelerated;
+    set_background_color({ 0.0f, 0.0f, 0.0f, 1.0f });
 }
 
 void renderer::initialize() {
@@ -25,7 +26,7 @@ void renderer::initialize() {
     create_blend_state();
     create_default_resources();
 
-    set_background_color({ 0.0f, 0.0f, 0.0f, 1.0f });
+    application::get().log.debug("Initialized renderer for a window");
 }
 
 void renderer::update(entt::registry& registry) {
@@ -39,7 +40,7 @@ void renderer::update(entt::registry& registry) {
 }
 
 void renderer::destroy() {
-    //
+    application::get().log.debug("Renderer destroyed");
 }
 
 void renderer::set_background_color(const vector4 col) {
@@ -64,6 +65,8 @@ void renderer::render_frame(entt::registry& registry) {
 
     auto sampler = sampler_state.get();
     this->device_context->PSSetSamplers(0, 1, &sampler);
+    
+    auto& app = application::get();
 
     // entities should be sorted at this point
     auto view = registry.view<drawable, transform>();
@@ -78,8 +81,6 @@ void renderer::render_frame(entt::registry& registry) {
         ensure_mesh_buffers_created(d.mesh);
 
         // 2: set shaders and resources
-        auto& app = application::get();
-        
         auto vs = d.vs != nullptr ? d.vs : app.resources.get<vertex_shader>("default");
         auto ps = d.ps != nullptr ? d.ps : app.resources.get<pixel_shader>("default");
         this->device_context->VSSetShader(vs->get().get(), nullptr, 0);
@@ -134,9 +135,7 @@ void renderer::render_frame(entt::registry& registry) {
     );
 
     HRESULT hr = this->swap_chain->Present(1, 0);
-    if (FAILED(hr)) {
-        // log error
-    }
+    LOG_HRESULT(warn, "DirectX error this frame", hr);
 }
 
 void renderer::create_device_and_swap_chain() {
@@ -178,21 +177,15 @@ void renderer::create_device_and_swap_chain() {
         device_context.put() // device context output
     );
 
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(critical, "Device and swap chain creation failed", hr);
 }
 
 void renderer::create_render_targets() {
     HRESULT hr = this->swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), this->render_target.put_void());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Back buffer retrieval failed", hr);
     
     hr = this->device->CreateRenderTargetView(this->render_target.get(), nullptr, this->render_target_view.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Render target creation failed", hr);
 
     // msaa
     CD3D11_TEXTURE2D_DESC multisampled_texture_desc(
@@ -208,16 +201,12 @@ void renderer::create_render_targets() {
     );
 
     hr = this->device->CreateTexture2D(&multisampled_texture_desc, nullptr, this->multisampled_render_target.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Multisampled texture creation failed", hr);
 
     CD3D11_RENDER_TARGET_VIEW_DESC render_target_desc(D3D11_RTV_DIMENSION_TEXTURE2DMS);
     hr = this->device->CreateRenderTargetView(this->multisampled_render_target.get(), &render_target_desc,
         this->multisampled_render_target_view.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Multisampled render target creation failed", hr);
 
     CD3D11_TEXTURE2D_DESC multisampled_depth_desc(
         DXGI_FORMAT_D32_FLOAT,
@@ -233,15 +222,11 @@ void renderer::create_render_targets() {
 
     winrt::com_ptr<ID3D11Texture2D> depth_buffer;
     hr = this->device->CreateTexture2D(&multisampled_depth_desc, nullptr, depth_buffer.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Multisampled depth buffer creation failed", hr);
 
     CD3D11_DEPTH_STENCIL_VIEW_DESC view_desc(D3D11_DSV_DIMENSION_TEXTURE2DMS);
     hr = this->device->CreateDepthStencilView(depth_buffer.get(), &view_desc, this->multisampled_depth_stencil_view.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Multisampled depth stencil view creation failed", hr);
 }
 
 void renderer::set_viewport() {
@@ -255,17 +240,13 @@ void renderer::create_rasterizer() {
     desc.MultisampleEnable = true; // oh yeah multisampling too
     
     HRESULT hr = this->device->CreateRasterizerState(&desc, this->rasterizer_state.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Rasterizer state creation failed", hr);
 }
 
 void renderer::create_sampler() {
     CD3D11_SAMPLER_DESC desc(D3D11_DEFAULT);
     HRESULT hr = this->device->CreateSamplerState(&desc, this->sampler_state.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Sampler creation failed", hr);
 }
 
 void renderer::create_blend_state() {
@@ -284,9 +265,7 @@ void renderer::create_blend_state() {
     blend_desc.RenderTarget[0] = rt_blend_desc;
 
     HRESULT hr = this->device->CreateBlendState(&blend_desc, this->blend_state.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Blend state creation failed failed", hr);
 }
 
 void renderer::create_default_resources() {
@@ -312,9 +291,7 @@ void renderer::create_default_resources() {
         this->input_layout.put()
     );
 
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Input layout creation failed", hr);
 }
 
 void renderer::ensure_texture_loaded(const std::shared_ptr<texture>& tex) {
@@ -348,9 +325,7 @@ void renderer::ensure_texture_loaded(const std::shared_ptr<texture>& tex) {
     texture_resource.as<ID3D11Texture2D>()->GetDesc(&desc);
     tex->size = { static_cast<float>(desc.Width), static_cast<float>(desc.Height) };
 
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Texture creation failed", hr);
 }
 
 void renderer::ensure_mesh_buffers_created(const std::shared_ptr<mesh>& m) {

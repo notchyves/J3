@@ -5,9 +5,7 @@ void vertex_shader::initialize(const winrt::com_ptr<ID3D11Device>& device, const
     this->shader_size = data.size();
     
     HRESULT hr = device->CreateVertexShader(data.data(), data.size(), nullptr, shader.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Vertex shader creation failed", hr);
 }
 
 winrt::com_ptr<ID3D11VertexShader>& vertex_shader::get() {
@@ -31,9 +29,7 @@ void pixel_shader::initialize(const winrt::com_ptr<ID3D11Device>& device, const 
     this->shader_size = data.size();
     
     HRESULT hr = device->CreatePixelShader(data.data(), data.size(), nullptr, shader.put());
-    if (FAILED(hr)) {
-        // handle error
-    }
+    LOG_HRESULT(error, "Pixel shader creation failed", hr);
 }
 
 winrt::com_ptr<ID3D11PixelShader>& pixel_shader::get() {
