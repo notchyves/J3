@@ -3,11 +3,14 @@
 
 struct hierarchy_layer {
 private:
+    // basically implementing a linked list
     entt::entity parent = entt::null;
+    entt::entity first_child = entt::null;
+    entt::entity prev_sibling = entt::null;
+    entt::entity next_sibling = entt::null;
+    
     uint32_t layer = 0;
     bool dirty = false;
-
-    // no vector of children because it gets expensive
 
 public:
     [[nodiscard]] entt::entity get_parent() const {
