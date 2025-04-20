@@ -94,14 +94,14 @@ function(ADD_FONTS out_var)
         file(RELATIVE_PATH src_f ${CMAKE_SOURCE_DIR} ${in_f})
         get_filename_component(in_f_name ${in_f} NAME)
         add_custom_command(
-                OUTPUT "${OBJ_DIR}/${in_f_name}.arfont" "${OBJ_DIR}/${in_f_name}.json"
-                COMMAND ${TOOL_DIR}/msdf-atlas-gen.exe -font ${src_f} -format png -arfont ${OBJ_DIR}/${in_f_name}.arfont -json ${OBJ_DIR}/${in_f_name}.json -size 36 -pxrange 6
+                OUTPUT "${OBJ_DIR}/${in_f_name}.arfont"
+                COMMAND ${TOOL_DIR}/msdf-atlas-gen.exe -font ${src_f} -format png -arfont ${OBJ_DIR}/${in_f_name}.arfont -size 36 -pxrange 6
                 DEPENDS ${in_f}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                 COMMENT "Building font ${in_f}"
                 VERBATIM
         )
-        list(APPEND result "${OBJ_DIR}/${in_f_name}.arfont" "${OBJ_DIR}/${in_f_name}.json")
+        list(APPEND result "${OBJ_DIR}/${in_f_name}.arfont")
     endforeach()
     set(${out_var} "${result}" PARENT_SCOPE)
 endfunction()
