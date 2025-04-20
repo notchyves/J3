@@ -42,7 +42,7 @@ file(GLOB VERTEX_SHADERS CONFIGURE_DEPENDS "resources/shaders/*.vs.hlsl")
 file(GLOB PIXEL_SHADERS CONFIGURE_DEPENDS "resources/shaders/*.ps.hlsl")
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp" "src/*.hpp")
 
-file(GLOB FONTS CONFIGURE "resources/fonts/*.ttf")
+file(GLOB FONTS CONFIGURE_DEPENDS "resources/fonts/*.ttf")
 
 set_source_files_properties(${VERTEX_SHADERS} PROPERTIES ShaderType "vs")
 set_source_files_properties(${PIXEL_SHADERS} PROPERTIES ShaderType "ps")
@@ -94,14 +94,14 @@ function(ADD_FONTS out_var)
         file(RELATIVE_PATH src_f ${CMAKE_SOURCE_DIR} ${in_f})
         get_filename_component(in_f_name ${in_f} NAME)
         add_custom_command(
-                OUTPUT "${OBJ_DIR}/${in_f_name}.png" "${OBJ_DIR}/${in_f_name}.json"
-                COMMAND ${TOOL_DIR}/msdf-atlas-gen.exe -font ${src_f} -format png -imageout ${OBJ_DIR}/${in_f_name}.png -json ${OBJ_DIR}/${in_f_name}.json -size 36 -pxrange 6
+                OUTPUT "${OBJ_DIR}/${in_f_name}.arfont" "${OBJ_DIR}/${in_f_name}.json"
+                COMMAND ${TOOL_DIR}/msdf-atlas-gen.exe -font ${src_f} -format png -arfont ${OBJ_DIR}/${in_f_name}.arfont -json ${OBJ_DIR}/${in_f_name}.json -size 36 -pxrange 6
                 DEPENDS ${in_f}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                 COMMENT "Building font ${in_f}"
                 VERBATIM
         )
-        list(APPEND result "${OBJ_DIR}/${in_f_name}.png" "${OBJ_DIR}/${in_f_name}.json")
+        list(APPEND result "${OBJ_DIR}/${in_f_name}.arfont" "${OBJ_DIR}/${in_f_name}.json")
     endforeach()
     set(${out_var} "${result}" PARENT_SCOPE)
 endfunction()
