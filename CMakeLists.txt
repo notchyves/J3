@@ -27,7 +27,15 @@ FetchContent_Declare(
         GIT_TAG oct2024
 )
 
-FetchContent_MakeAvailable(spdlog entt DirectXTK)
+# not a cmake project
+FetchContent_Declare(
+        artery-font-format
+        GIT_REPOSITORY https://github.com/Chlumsky/artery-font-format.git
+        GIT_TAG v1.1
+)
+
+FetchContent_MakeAvailable(spdlog entt DirectXTK artery-font-format)
+FetchContent_GetProperties(artery-font-format)
 
 ### source files
 
@@ -135,12 +143,16 @@ add_executable(j3 WIN32 ${SOURCES} ${SHADER_OUTPUTS} ${FONT_OUTPUTS} ${RESOURCE_
 ### includes and libraries
 
 include_directories(src)
+include_directories(${artery-font-format_SOURCE_DIR})
 target_precompile_headers(j3 PRIVATE src/common.hpp)
+
+add_library(artery-font-format INTERFACE)
+target_include_directories(artery-font-format INTERFACE ${artery-font-format_SOURCE_DIR}/artery-font)
 
 # disable unity build for DirectXTK
 set_property(TARGET DirectXTK PROPERTY UNITY_BUILD FALSE)
 
-target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK d3d11 dxgi d3dcompiler)
+target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK d3d11 dxgi d3dcompiler artery-font-format)
 
 target_compile_definitions(j3 PRIVATE UNICODE)
 target_compile_definitions(j3 PRIVATE WINDOW_CLASS_NAME=L"j3window")
