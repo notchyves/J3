@@ -8,6 +8,7 @@
 struct drawable {
     std::shared_ptr<mesh> mesh;
     std::shared_ptr<texture> tex;
+    D3D11_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     
     std::shared_ptr<vertex_shader> vs;
     std::shared_ptr<pixel_shader> ps;

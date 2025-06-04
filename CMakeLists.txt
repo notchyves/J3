@@ -28,11 +28,16 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(spdlog entt DirectXTK)
+FetchContent_GetProperties(artery-font-format)
 
 ### source files
 
 # create obj directory for intermediate files
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/obj)
+
+# define common folders
+set(OBJ_DIR ${CMAKE_CURRENT_SOURCE_DIR}/obj)
+set(TOOL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 
 file(GLOB VERTEX_SHADERS CONFIGURE_DEPENDS "resources/shaders/*.vs.hlsl")
 file(GLOB PIXEL_SHADERS CONFIGURE_DEPENDS "resources/shaders/*.ps.hlsl")
@@ -50,14 +55,15 @@ function(ADD_SHADERS out_var)
         get_filename_component(FILE_WE ${FILE} NAME_WLE)
         get_source_file_property(SHADER_TYPE ${FILE} ShaderType)
         get_source_file_property(SHADER_MODEL ${FILE} ShaderModel)
-        add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/obj/${FILE_WE}.cso
-                COMMAND fxc.exe /nologo /Emain /T${SHADER_TYPE}_${SHADER_MODEL} $<IF:$<CONFIG:DEBUG>,/Od,/O1> /Fo ${CMAKE_CURRENT_SOURCE_DIR}/obj/${FILE_WE}.cso ${FILE}
+        add_custom_command(
+                OUTPUT ${OBJ_DIR}/${FILE_WE}.cso
+                COMMAND fxc.exe /nologo /Emain /T${SHADER_TYPE}_${SHADER_MODEL} $<IF:$<CONFIG:DEBUG>,/Od,/O1> /Fo ${OBJ_DIR}/${FILE_WE}.cso ${FILE}
                 DEPENDS ${FILE}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMENT "Building shader ${FILE_WE}.cso"
                 VERBATIM
         )
-        list(APPEND result ${CMAKE_CURRENT_SOURCE_DIR}/obj/${FILE_WE}.cso)
+        list(APPEND result ${OBJ_DIR}/${FILE_WE}.cso)
     endforeach()
     set(${out_var} "${result}" PARENT_SCOPE)
 endfunction()
@@ -68,8 +74,9 @@ function(ADD_RESOURCES out_var)
         file(RELATIVE_PATH src_f ${CMAKE_SOURCE_DIR} ${in_f})
         get_filename_component(in_f_name ${in_f} NAME)
         set(out_f "${PROJECT_BINARY_DIR}/${in_f_name}.o")
-        add_custom_command(OUTPUT ${out_f}
-                COMMAND ld -r -b binary -o ${out_f} ${src_f}
+        add_custom_command(
+                OUTPUT ${out_f}
+                COMMAND ${TOOL_DIR}/ld.exe -r -b binary -o ${out_f} ${src_f}
                 DEPENDS ${in_f}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                 COMMENT "Adding resource ${in_f}"
@@ -88,7 +95,7 @@ add_shaders(SHADER_OUTPUTS ${VERTEX_SHADERS} ${PIXEL_SHADERS})
 
 file(GLOB_RECURSE INTERMEDIARIES CONFIGURE_DEPENDS "obj/*")
 
-# all resources except shaders get embedded into the executable
+# all resources except shaders and fonts get embedded into the executable
 file(GLOB_RECURSE RESOURCES CONFIGURE_DEPENDS "resources/*")
 list(FILTER RESOURCES EXCLUDE REGEX "resources/shaders/*")
 

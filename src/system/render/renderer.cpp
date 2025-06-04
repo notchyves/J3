@@ -58,7 +58,6 @@ void renderer::render_frame(entt::registry& registry) {
     this->device_context->OMSetRenderTargets(1, &target_ptr, this->multisampled_depth_stencil_view.get());
 
     this->device_context->IASetInputLayout(input_layout.get());
-    this->device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     this->device_context->RSSetState(rasterizer_state.get());
     this->device_context->OMSetBlendState(this->blend_state.get(), nullptr, 0xFFFFFFFF);
@@ -119,7 +118,9 @@ void renderer::render_frame(entt::registry& registry) {
         this->device_context->VSSetConstantBuffers(0, 1, &cb_ptr);
         this->device_context->PSSetConstantBuffers(0, 1, &cbp_ptr);
 
-        // 4: set vertex and index buffers
+        // 4: set topology and vertex/index buffers
+        this->device_context->IASetPrimitiveTopology(d.topology);
+        
         const UINT offset = 0;
         auto vb = d.mesh->vertex_buffer->get().get();
         this->device_context->IASetVertexBuffers(0, 1, &vb, d.mesh->vertex_buffer->stride_ptr(), &offset);
