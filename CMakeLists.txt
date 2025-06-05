@@ -5,9 +5,17 @@ include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_UNITY_BUILD TRUE)
-set(DIRECTX_ARCH x64) # for DirectXTK
+
+# for DirectXTK
+set(DIRECTX_ARCH x64)
+
+# for RmlUi
+set(RMLUI_BACKEND Win32_DX11)
 
 ### dependencies
+
+add_subdirectory(tools/freetype)
+add_library(Freetype::Freetype ALIAS freetype)
 
 FetchContent_Declare(
         spdlog
@@ -27,7 +35,13 @@ FetchContent_Declare(
         GIT_TAG oct2024
 )
 
-FetchContent_MakeAvailable(spdlog entt DirectXTK)
+FetchContent_Declare(
+        RmlUi
+        GIT_REPOSITORY https://github.com/phasephasephase/RmlUi.git
+        GIT_TAG 338ce6c2d11d26481fba5c6f78239910ccd19018
+)
+
+FetchContent_MakeAvailable(spdlog entt DirectXTK RmlUi)
 
 ### source files
 
@@ -112,10 +126,19 @@ add_executable(j3 WIN32 ${SOURCES} ${SHADER_OUTPUTS} ${RESOURCE_OBJECTS})
 include_directories(src)
 target_precompile_headers(j3 PRIVATE src/common.hpp)
 
-# disable unity build for DirectXTK
-set_property(TARGET DirectXTK PROPERTY UNITY_BUILD FALSE)
+# disable unity build for DirectXTK and RmlUi
+set_property(TARGET DirectXTK rmlui_core rmlui_debugger freetype PROPERTY UNITY_BUILD FALSE)
 
-target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK d3d11 dxgi d3dcompiler)
+# RmlUi backend stuff
+set(RMLUI_BACKEND_PATH ${RmlUi_SOURCE_DIR}/Backends)
+add_library(rmlui_backend_WIN32_DX11 INTERFACE)
+target_sources(rmlui_backend_WIN32_DX11 INTERFACE
+        ${RMLUI_BACKEND_PATH}/RmlUi_Platform_Win32.cpp
+        ${RMLUI_BACKEND_PATH}/RmlUi_Renderer_DX11.cpp
+)
+target_include_directories(rmlui_backend_WIN32_DX11 INTERFACE ${RMLUI_BACKEND_PATH})
+
+target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 d3d11 dxgi d3dcompiler)
 
 target_compile_definitions(j3 PRIVATE UNICODE)
 target_compile_definitions(j3 PRIVATE WINDOW_CLASS_NAME=L"j3window")
