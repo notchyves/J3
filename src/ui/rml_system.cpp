@@ -30,6 +30,9 @@ void rml_system::initialize(HWND handle, vector2 size, const winrt::com_ptr<ID3D
     // add languages (BCP47 code for language, ISO15924 code for script... then text direction obviously)
     this->font_engine->RegisterLanguage("en", "Latn", TextFlowDirection::LeftToRight);
 
+    this->ime = Rml::MakeUnique<TextInputMethodEditor_Win32>();
+    Rml::SetTextInputHandler(this->ime.get());
+
     Rml::Initialise();
     this->context = Rml::CreateContext("main", this->window_size);
 
@@ -66,6 +69,13 @@ void rml_system::update() {
 
 void rml_system::destroy() {
     Rml::Shutdown();
+    this->ime.reset();
+}
+
+bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) {
+    if (this->ime == nullptr)
+        return false; // prevent access of null pointer after destruction
+    return !RmlWin32::WindowProcedure(this->context, *this->ime, window_handle, message, w_param, l_param);
 }
 
 Rml::ElementDocument* rml_system::init_page(page& p) const {

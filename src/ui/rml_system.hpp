@@ -14,6 +14,8 @@ struct rml_system {
     void update();
     void destroy();
 
+    bool window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
+
     template <typename page_t, typename... args>
     void register_page(args&&... a);
 
@@ -38,6 +40,7 @@ private:
     Rml::Context* context = nullptr;
     Rml::SharedPtr<Rml::StyleSheetContainer> default_styles;
     Rml::UniquePtr<FontEngineInterfaceHarfBuzz> font_engine;
+    Rml::UniquePtr<TextInputMethodEditor_Win32> ime;
     std::unordered_map<page_hash, Rml::ElementDocument*> document_map;
     
     Rml::ElementDocument* init_page(page& p) const;

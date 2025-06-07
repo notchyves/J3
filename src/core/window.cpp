@@ -124,11 +124,13 @@ void window::close() {
 }
 
 bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
-    // just handle quit for now
     if (message == WM_CLOSE) {
         close();
         return true;
     }
+    
+    if (this->rml.window_procedure(this->handle, message, w_param, l_param))
+        return true;
 
     return false; // not handled
 }

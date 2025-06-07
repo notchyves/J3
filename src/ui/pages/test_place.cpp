@@ -13,6 +13,8 @@ std::string_view test_place::layout() {
         <body>
             <h1>J3</h1>
             <p>I wrote this text using harfbuzz, and you can tell because these characters I just wrote are overhanging</p>
+            <p>a text box for demonstration purposes:</p>
+            <input type="text"/>
         </body>
         </rml>
     )";
@@ -37,6 +39,18 @@ std::string_view test_place::styles() {
 
         p {
             font-size: 16px;
+        }
+
+        input.text {
+            background-color: #fff;
+            color: #555;
+            border: 2px #999;
+            padding: 5px;
+            tab-index: auto;
+            cursor: text;
+            box-sizing: border-box;
+            width: 200px;
+            font-size: 14px;
         }
     )";
 }
