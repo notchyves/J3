@@ -4,6 +4,7 @@
 
 #include "component/basic/drawable.hpp"
 #include "component/basic/transform.hpp"
+#include "component/ui/rml_container.hpp"
 #include "mesh/vertex.hpp"
 #include "resource/resource.hpp"
 
@@ -50,9 +51,17 @@ void renderer::set_background_color(const vector4 col) {
     background_color[3] = col.w;
 }
 
+winrt::com_ptr<ID3D11Device>& renderer::get_device() {
+    return this->device;
+}
+
+winrt::com_ptr<ID3D11RenderTargetView>& renderer::get_rtv() {
+    return this->multisampled_render_target_view;
+}
+
 void renderer::render_frame(entt::registry& registry) {
-    this->device_context->ClearRenderTargetView(this->multisampled_render_target_view.get(), background_color.data());
-    this->device_context->ClearDepthStencilView(this->multisampled_depth_stencil_view.get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    //this->device_context->ClearRenderTargetView(this->multisampled_render_target_view.get(), background_color.data());
+    //this->device_context->ClearDepthStencilView(this->multisampled_depth_stencil_view.get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     auto target_ptr = multisampled_render_target_view.get();
     this->device_context->OMSetRenderTargets(1, &target_ptr, this->multisampled_depth_stencil_view.get());
@@ -128,6 +137,13 @@ void renderer::render_frame(entt::registry& registry) {
 
         // 5: draw
         this->device_context->DrawIndexed(d.mesh->indices.size(), 0, 0);
+    }
+
+    // 6??: draw UI on top of objects
+    auto rml_view = registry.view<rml_container>();
+    for (auto entity : rml_view) {
+        auto& c = rml_view.get<rml_container>(entity);
+        c.render();
     }
 
     this->device_context->ResolveSubresource(this->render_target.get(), 0,

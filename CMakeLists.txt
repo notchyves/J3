@@ -11,6 +11,7 @@ set(DIRECTX_ARCH x64)
 
 # for RmlUi
 set(RMLUI_BACKEND Win32_DX11)
+set(BUILD_SHARED_LIBS OFF)
 
 ### dependencies
 
@@ -108,7 +109,7 @@ add_shaders(SHADER_OUTPUTS ${VERTEX_SHADERS} ${PIXEL_SHADERS})
 
 file(GLOB_RECURSE INTERMEDIARIES CONFIGURE_DEPENDS "obj/*")
 
-# all resources except shaders and fonts get embedded into the executable
+# all resources except shaders get embedded into the executable
 file(GLOB_RECURSE RESOURCES CONFIGURE_DEPENDS "resources/*")
 list(FILTER RESOURCES EXCLUDE REGEX "resources/shaders/*")
 

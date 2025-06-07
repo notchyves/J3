@@ -24,6 +24,9 @@ struct renderer {
 
     void set_background_color(vector4 col);
 
+    winrt::com_ptr<ID3D11Device>& get_device();
+    winrt::com_ptr<ID3D11RenderTargetView>& get_rtv();
+
 private:
     HWND window_handle = nullptr;
     vector2 window_size = { 0, 0 };
