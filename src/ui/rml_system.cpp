@@ -327,5 +327,17 @@ std::string_view rml_system::get_default_styles_str() {
 		button:hover {
 			filter: brightness(120%);
 		}
+
+		input.text {
+            background-color: #FFFFFF;
+            color: #000000;
+            border: 2px #999999;
+            padding: 5px;
+            tab-index: auto;
+            cursor: text;
+            box-sizing: border-box;
+            width: 200px;
+			font-size: 14px;
+        }
     )";
 }
