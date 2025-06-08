@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 project(j3)
 
-include(FetchContent)
+include(cmake/CPM.cmake)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_UNITY_BUILD TRUE)
@@ -9,25 +9,9 @@ set(DIRECTX_ARCH x64) # for DirectXTK
 
 ### dependencies
 
-FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-        GIT_TAG v1.15.1
-)
-
-FetchContent_Declare(
-        entt
-        GIT_REPOSITORY https://github.com/skypjack/entt.git
-        GIT_TAG v3.14.0
-)
-
-FetchContent_Declare(
-        DirectXTK
-        GIT_REPOSITORY https://github.com/microsoft/DirectXTK.git
-        GIT_TAG oct2024
-)
-
-FetchContent_MakeAvailable(spdlog entt DirectXTK)
+CPMAddPackage("gh:gabime/spdlog@1.15.3")
+CPMAddPackage("gh:skypjack/entt@3.15.0")
+CPMAddPackage("gh:microsoft/DirectXTK#mar2025")
 
 ### source files
 
