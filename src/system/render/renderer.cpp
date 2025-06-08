@@ -60,8 +60,8 @@ winrt::com_ptr<ID3D11RenderTargetView>& renderer::get_rtv() {
 }
 
 void renderer::render_frame(entt::registry& registry) {
-    //this->device_context->ClearRenderTargetView(this->multisampled_render_target_view.get(), background_color.data());
-    //this->device_context->ClearDepthStencilView(this->multisampled_depth_stencil_view.get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    this->device_context->ClearRenderTargetView(this->multisampled_render_target_view.get(), background_color.data());
+    this->device_context->ClearDepthStencilView(this->multisampled_depth_stencil_view.get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     auto target_ptr = multisampled_render_target_view.get();
     this->device_context->OMSetRenderTargets(1, &target_ptr, this->multisampled_depth_stencil_view.get());

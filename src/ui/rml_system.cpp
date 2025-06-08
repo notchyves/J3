@@ -81,9 +81,17 @@ bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_par
 Rml::ElementDocument* rml_system::init_page(page& p) const {
     auto& app = application::get();
 
+	Rml::DataModelConstructor dmc = this->context->CreateDataModel(Rml::String(p->id()) + "_data");
+	if (!dmc) {
+		app.log.error("Data model creation failed for page {}", p->id());
+		return nullptr;
+	}
+
+	p->bind_data(dmc);
+
     Rml::ElementDocument* doc = this->context->LoadDocumentFromMemory(Rml::String(p->layout()), Rml::String(p->id()));
     if (doc == nullptr) {
-        app.log.error("'{}' page failed to initialize", p->id());
+        app.log.error("Document failed to load for page {}", p->id());
         return nullptr;
     }
     
@@ -322,6 +330,17 @@ std::string_view rml_system::get_default_styles_str() {
 		tbody,
 		tfoot {
 			display: table-row-group;
+		}
+
+		button {
+			background-color: #FFFFFF;
+            color: #000000;
+            border: 2px #999999;
+            padding: 5px;
+            tab-index: auto;
+            cursor: pointer;
+            box-sizing: border-box;
+			font-size: 14px;
 		}
 
 		button:hover {
