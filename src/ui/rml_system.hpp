@@ -14,6 +14,7 @@ struct rml_system {
     void update();
     void destroy();
 
+    void resize(vector2 new_size, const winrt::com_ptr<ID3D11RenderTargetView>& rtv);
     bool window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
 
     template <typename page_t, typename... args>

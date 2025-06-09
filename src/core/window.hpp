@@ -1,5 +1,6 @@
 #pragma once
 #include "common.hpp"
+
 #include "system/ecs_manager.hpp"
 #include "ui/rml_system.hpp"
 
@@ -23,6 +24,7 @@ public:
 
 private:
     bool closing;
+
     ecs_manager ecs;
     rml_system rml;
 };

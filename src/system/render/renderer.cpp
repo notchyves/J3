@@ -11,6 +11,12 @@
 LOAD_RESOURCE(obj_vertex_vs_cso)
 LOAD_RESOURCE(obj_pixel_ps_cso)
 
+std::unordered_map<HWND, renderer*> renderer::renderer_map;
+
+renderer& renderer::get_for_window(const HWND handle) {
+    return *renderer_map[handle];
+}
+
 renderer::renderer(const HWND handle, const vector2 size, const bool hardware_accelerated) {
     this->window_handle = handle;
     this->window_size = size;
@@ -27,6 +33,7 @@ void renderer::initialize() {
     create_blend_state();
     create_default_resources();
 
+    renderer_map[this->window_handle] = this;
     application::get().log.debug("Initialized renderer for a window");
 }
 
@@ -49,6 +56,27 @@ void renderer::set_background_color(const vector4 col) {
     background_color[1] = col.y;
     background_color[2] = col.z;
     background_color[3] = col.w;
+}
+
+void renderer::resize(vector2 new_size) {
+    // working backwards from renderer::create_render_targets
+    this->multisampled_depth_stencil_view = nullptr;
+    this->multisampled_render_target_view = nullptr;
+    this->multisampled_render_target = nullptr;
+    this->render_target_view = nullptr;
+    this->render_target = nullptr;
+
+    HRESULT hr = this->swap_chain->ResizeBuffers(
+        0, // buffer count, set to 0 to preserve buffers
+        static_cast<UINT>(new_size.x),
+        static_cast<UINT>(new_size.y),
+        this->back_buffer_format,
+        this->swap_chain_flags
+    );
+
+    LOG_HRESULT(error, "Resize failed", hr);
+
+    this->create_render_targets();
 }
 
 winrt::com_ptr<ID3D11Device>& renderer::get_device() {
@@ -177,7 +205,7 @@ void renderer::create_device_and_swap_chain() {
     swap_chain_desc.OutputWindow = this->window_handle;
     swap_chain_desc.Windowed = true;
     swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; // discard last frame after presenting
-    swap_chain_desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // allow resizing
+    swap_chain_desc.Flags = this->swap_chain_flags; // allow resizing
     
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
         nullptr, // video adapter, pass null to use best available

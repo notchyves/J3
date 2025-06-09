@@ -4,7 +4,6 @@
 #include "buffer/d3d_buffer.hpp"
 #include "material/texture.hpp"
 #include "mesh/mesh.hpp"
-#include "shader/shader.hpp"
 
 class adapter_data {
 public:
@@ -17,22 +16,28 @@ public:
 };
 
 struct renderer {
+    static renderer& get_for_window(const HWND handle);
+
     renderer(HWND handle, vector2 size, bool hardware_accelerated = true);
     void initialize();
     void update(entt::registry& registry);
     void destroy();
 
     void set_background_color(vector4 col);
+    void resize(vector2 new_size);
 
     winrt::com_ptr<ID3D11Device>& get_device();
     winrt::com_ptr<ID3D11RenderTargetView>& get_rtv();
 
 private:
+    static std::unordered_map<HWND, renderer*> renderer_map;
+    
     HWND window_handle = nullptr;
     vector2 window_size = { 0, 0 };
     bool hardware_accelerated = true; // by default
     std::array<float, 4> background_color;
     DXGI_FORMAT back_buffer_format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    UINT swap_chain_flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
     
     winrt::com_ptr<ID3D11Device> device;
     winrt::com_ptr<ID3D11DeviceContext> device_context;

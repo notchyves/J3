@@ -1,6 +1,6 @@
 #include "window.hpp"
 
-#include "application.hpp" // avoid circular dependency
+#include "application.hpp"
 #include "component/basic/drawable.hpp"
 #include "component/basic/transform.hpp"
 #include "component/ui/rml_container.hpp"
@@ -126,6 +126,19 @@ bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
     if (message == WM_CLOSE) {
         close();
         return true;
+    }
+
+    if (message == WM_SIZE) {
+        UINT width = LOWORD(l_param);
+        UINT height = HIWORD(l_param);
+        
+        // do you guys like back and forth conversion
+        vector2 new_size = { static_cast<float>(width), static_cast<float>(height) };
+
+        renderer& rend = renderer::get_for_window(this->handle);
+        
+        rend.resize(new_size);
+        this->rml.resize(new_size, rend.get_rtv());
     }
     
     if (this->rml.window_procedure(this->handle, message, w_param, l_param))

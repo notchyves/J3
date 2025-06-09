@@ -72,9 +72,15 @@ void rml_system::destroy() {
     this->ime.reset();
 }
 
+void rml_system::resize(const vector2 new_size, const winrt::com_ptr<ID3D11RenderTargetView>& rtv) {
+	this->window_size = { static_cast<int>(new_size.x), static_cast<int>(new_size.y) };
+	this->render_target_view = rtv;
+}
+
 bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) {
     if (this->ime == nullptr)
         return false; // prevent access of null pointer after destruction
+	
     return !RmlWin32::WindowProcedure(this->context, *this->ime, window_handle, message, w_param, l_param);
 }
 
