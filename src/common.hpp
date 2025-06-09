@@ -29,6 +29,7 @@
 #include <entt/entt.hpp>
 #include <spdlog/spdlog.h>
 #include <DirectXMath.h>
+#include <RmlUi/Core.h>
 
 // aliases for dxmath because the names are silly
 using vector = DirectX::XMVECTOR;

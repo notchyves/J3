@@ -5,13 +5,25 @@ include(cmake/CPM.cmake)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_UNITY_BUILD TRUE)
-set(DIRECTX_ARCH x64) # for DirectXTK
+
+# for DirectXTK
+set(DIRECTX_ARCH x64)
+
+# for RmlUi
+set(RMLUI_BACKEND Win32_DX11)
+set(BUILD_SHARED_LIBS OFF)
 
 ### dependencies
 
 CPMAddPackage("gh:gabime/spdlog@1.15.3")
 CPMAddPackage("gh:skypjack/entt@3.15.0")
 CPMAddPackage("gh:microsoft/DirectXTK#mar2025")
+CPMAddPackage("https://gitlab.freedesktop.org/freetype/freetype.git#VER-2-13-3")
+CPMAddPackage("gh:harfbuzz/harfbuzz#11.2.1")
+
+# define alias for freetype so RmlUi can find it
+add_library(Freetype::Freetype ALIAS freetype)
+CPMAddPackage("gh:phasephasephase/RmlUi#dx11-backend")
 
 ### source files
 
@@ -78,7 +90,7 @@ add_shaders(SHADER_OUTPUTS ${VERTEX_SHADERS} ${PIXEL_SHADERS})
 
 file(GLOB_RECURSE INTERMEDIARIES CONFIGURE_DEPENDS "obj/*")
 
-# all resources except shaders and fonts get embedded into the executable
+# all resources except shaders get embedded into the executable
 file(GLOB_RECURSE RESOURCES CONFIGURE_DEPENDS "resources/*")
 list(FILTER RESOURCES EXCLUDE REGEX "resources/shaders/*")
 
@@ -96,10 +108,23 @@ add_executable(j3 WIN32 ${SOURCES} ${SHADER_OUTPUTS} ${RESOURCE_OBJECTS})
 include_directories(src)
 target_precompile_headers(j3 PRIVATE src/common.hpp)
 
-# disable unity build for DirectXTK
-set_property(TARGET DirectXTK PROPERTY UNITY_BUILD FALSE)
+# disable unity build for DirectXTK and RmlUi
+set_property(TARGET DirectXTK rmlui_core rmlui_debugger freetype PROPERTY UNITY_BUILD FALSE)
 
-target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK d3d11 dxgi d3dcompiler)
+# RmlUi backend stuff
+set(RMLUI_BACKEND_PATH ${RmlUi_SOURCE_DIR}/Backends)
+add_library(rmlui_backend_WIN32_DX11 INTERFACE)
+target_sources(rmlui_backend_WIN32_DX11 INTERFACE
+        ${RMLUI_BACKEND_PATH}/RmlUi_Platform_Win32.cpp
+        ${RMLUI_BACKEND_PATH}/RmlUi_Renderer_DX11.cpp
+)
+target_include_directories(rmlui_backend_WIN32_DX11 INTERFACE ${RMLUI_BACKEND_PATH})
+
+# include private RmlUi Core headers to make harfbuzz integration work
+# we gotta do this until harfbuzz is officially merged
+target_include_directories(j3 PRIVATE ${RmlUi_SOURCE_DIR}/Source/Core)
+
+target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 harfbuzz d3d11 dxgi d3dcompiler)
 
 target_compile_definitions(j3 PRIVATE UNICODE)
 target_compile_definitions(j3 PRIVATE WINDOW_CLASS_NAME=L"j3window")

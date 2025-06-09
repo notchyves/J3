@@ -3,7 +3,9 @@
 #include "application.hpp" // avoid circular dependency
 #include "component/basic/drawable.hpp"
 #include "component/basic/transform.hpp"
+#include "component/ui/rml_container.hpp"
 #include "system/render/renderer.hpp"
+#include "ui/pages/test_place.hpp"
 
 LOAD_RESOURCE(resources_textures_mart_png)
 
@@ -53,7 +55,7 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
     app.log.debug("Window created");
 
     // add and initialize systems
-    ecs.add_system<renderer>(handle, size); // hardware accelerated by default
+    renderer& r = ecs.add_system<renderer>(handle, size); // hardware accelerated by default
     ecs.initialize();
 
     // create resources
@@ -67,6 +69,15 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
         2, 1, 3
     });
 
+    // initialize services
+    rml.initialize(this->handle, size, r.get_device(), r.get_rtv());
+    rml.register_page<test_place>();
+    rml.show_page<test_place>();
+
+    // hand rml over to ecs so the renderer can access it
+    auto rml_entity = ecs.create_entity();
+    ecs.add_component<rml_container>(rml_entity, rml);
+
     auto mart = app.resources.add<texture>("mart", GET_RESOURCE(resources_textures_mart_png));
 
     // test drawing entity
@@ -74,8 +85,7 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
     ecs.add_component<drawable>(entity, quad, mart);
 
     auto& tr = ecs.add_component<transform>(entity);
-    tr.set_scale({ 1500, 1500 });
-    tr.set_rotation(30);
+    tr.set_scale({ 900, 550 });
 
     app.log.debug("Window systems initialized");
 }
@@ -83,6 +93,7 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
 void window::show() const {
     ShowWindow(handle, SW_SHOW);
     UpdateWindow(handle);
+    
     application::get().log.debug("Window shown");
 }
 
@@ -91,6 +102,8 @@ void window::update() {
 }
 
 void window::close() {
+    rml.destroy();
+    
     closing = true;
     DestroyWindow(handle);
     
@@ -110,11 +123,13 @@ void window::close() {
 }
 
 bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
-    // just handle quit for now
     if (message == WM_CLOSE) {
         close();
         return true;
     }
+    
+    if (this->rml.window_procedure(this->handle, message, w_param, l_param))
+        return true;
 
     return false; // not handled
 }
