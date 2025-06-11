@@ -129,7 +129,7 @@ target_include_directories(rmlui_backend_WIN32_DX11 INTERFACE ${RMLUI_BACKEND_PA
 # we gotta do this until harfbuzz is officially merged
 target_include_directories(j3 PRIVATE ${RmlUi_SOURCE_DIR}/Source/Core)
 
-target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 harfbuzz assimp d3d11 dxgi d3dcompiler)
+target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 harfbuzz assimp d3d11 dxgi d3dcompiler dwmapi)
 
 target_compile_definitions(j3 PRIVATE UNICODE)
 target_compile_definitions(j3 PRIVATE WINDOW_CLASS_NAME=L"j3window")

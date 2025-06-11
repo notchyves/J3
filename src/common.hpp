@@ -2,6 +2,7 @@
 
 // windows related includes
 #include <Windows.h>
+#include <dwmapi.h>
 #include <ShlObj.h>
 #include <d3d11.h>
 #include <dxgi1_4.h>

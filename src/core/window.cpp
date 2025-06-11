@@ -56,6 +56,11 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
 
     app.log.debug("Window created");
 
+    // set theme awareness here i guess
+    BOOL value = true;
+    HRESULT hr = DwmSetWindowAttribute(this->handle, DWMWA_USE_IMMERSIVE_DARK_MODE, &value, sizeof(value));
+    LOG_HRESULT(error, "Failed to set theme awareness for window", hr);
+    
     // add and initialize systems
     auto& r = this->ecs.add_system<renderer>(handle, size); // hardware accelerated by default
     this->ecs.initialize();
