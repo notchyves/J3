@@ -5,16 +5,6 @@
 #include "material/texture.hpp"
 #include "mesh/mesh.hpp"
 
-class adapter_data {
-public:
-    winrt::com_ptr<IDXGIAdapter> adapter;
-    DXGI_ADAPTER_DESC description;
-
-    explicit adapter_data(const winrt::com_ptr<IDXGIAdapter>& adapter) : adapter(adapter) {
-        this->adapter->GetDesc(&description);
-    }
-};
-
 struct renderer {
     static renderer& get_for_window(const HWND handle);
 

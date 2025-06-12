@@ -68,7 +68,7 @@ void renderer::resize(vector2 new_size) {
     this->render_target = nullptr;
 
     HRESULT hr = this->swap_chain->ResizeBuffers(
-        1,
+        2,
         static_cast<UINT>(new_size.x),
         static_cast<UINT>(new_size.y),
         this->back_buffer_format,
@@ -211,10 +211,10 @@ void renderer::create_device_and_swap_chain() {
     swap_chain_desc.SampleDesc.Quality = 0;
 
     swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swap_chain_desc.BufferCount = 1;
+    swap_chain_desc.BufferCount = 2;
     swap_chain_desc.OutputWindow = this->window_handle;
     swap_chain_desc.Windowed = true;
-    swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; // discard last frame after presenting
+    swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
     swap_chain_desc.Flags = this->swap_chain_flags; // allow resizing
     
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
