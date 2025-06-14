@@ -1,6 +1,7 @@
 #include "application.hpp"
 
 #include "special_folder.hpp"
+#include "service/internet/internet.hpp"
 
 alignas(application) char application_buffer[sizeof(application)];
 
@@ -10,13 +11,9 @@ application::application(const HINSTANCE instance) {
     
     this->instance = instance;
     this->log.info("Application start");
-    
-    if (HRESULT hr = CoInitialize(nullptr); FAILED(hr)) { // although this will probably never fail
-        this->log.critical("CoInitialize failed with HRESULT 0x{:08X}", hr);
-        this->quit(-1);
-    }
 
-    this->log.debug("Initialized COM apartment");
+    winrt::init_apartment();
+    this->log.debug("Initialized WinRT apartment");
     
     // get icon because i don't want to load one from a file
     std::array<wchar_t, MAX_PATH> module_path = { };
@@ -40,6 +37,12 @@ application::application(const HINSTANCE instance) {
         this->quit(-1);
         return;
     }
+
+    this->log.debug("Window class registered for application");
+
+    this->services.add<
+        internet
+    >();
 
     this->log.debug("Application singleton initialized");
 }
