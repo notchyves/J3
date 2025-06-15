@@ -1,8 +1,6 @@
 #include "test_place.hpp"
 
-std::string_view test_place::id() {
-    return "test_place";
-}
+std::string_view test_place::id() { return "test_place"; }
 
 std::string_view test_place::layout() {
     return R"(

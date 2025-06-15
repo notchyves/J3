@@ -1,8 +1,6 @@
 #include "global_layer.hpp"
 
-std::string_view global_layer::id() {
-    return "global_layer";
-}
+std::string_view global_layer::id() { return "global_layer"; }
 
 std::string_view global_layer::layout() {
     return R"(

@@ -6,25 +6,30 @@
 #include "component/basic/transform.hpp"
 #include "component/ui/rml_container.hpp"
 #include "system/render/renderer.hpp"
-#include "ui/pages/test_place.hpp"
 #include "ui/pages/global_layer/global_layer.hpp"
+#include "ui/pages/test_place.hpp"
 
 LOAD_RESOURCE(resources_textures_mart_png)
 LOAD_RESOURCE(resources_models_jiayi_logo_obj)
 
 window::window(const HINSTANCE instance, const std::wstring& title, const vector2 size, const bool main_window) {
     this->main_window = main_window;
-    this->finish_create(instance, title, {CW_USEDEFAULT, CW_USEDEFAULT}, size);
+    this->finish_create(instance, title, { CW_USEDEFAULT, CW_USEDEFAULT }, size);
 }
 
-window::window(const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size, const bool main_window) {
+window::window(
+    const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size,
+    const bool main_window
+) {
     this->main_window = main_window;
     this->finish_create(instance, title, position, size);
 }
 
-void window::finish_create(const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size) {
+void window::finish_create(
+    const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size
+) {
     auto& app = application::get();
-    
+
     RECT rect;
     rect.left = 0;
     rect.top = 0;
@@ -34,7 +39,7 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
     AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_APPWINDOW);
 
     vector2 real_size = { static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top) };
-    
+
     handle = CreateWindowEx(
         WS_EX_APPWINDOW,
         WINDOW_CLASS_NAME,
@@ -61,7 +66,7 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
     BOOL value = true;
     HRESULT hr = DwmSetWindowAttribute(this->handle, DWMWA_USE_IMMERSIVE_DARK_MODE, &value, sizeof(value));
     LOG_HRESULT(error, "Failed to set theme awareness for window", hr);
-    
+
     // add and initialize systems
     auto& r = this->ecs.add_system<renderer>(handle, size); // hardware accelerated by default
     this->ecs.initialize();
@@ -81,14 +86,14 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
     this->rml.initialize(this->handle, size, r.get_device(), r.get_rtv());
     this->rml.register_page<test_place>();
     this->rml.register_page<global_layer>();
-    
+
     this->rml.show_page<test_place>();
     this->rml.show_page<global_layer>();
-    
+
     // hand rml over to ecs so the renderer can access it
     auto rml_entity = this->ecs.create_entity();
     ecs.add_component<rml_container>(rml_entity, this->rml);
-    
+
     // test drawing entity
     this->jiayi_logo_entity = this->ecs.create_entity();
     ecs.add_component<drawable>(this->jiayi_logo_entity, jiayi_logo);
@@ -102,7 +107,7 @@ void window::finish_create(const HINSTANCE instance, const std::wstring& title, 
 void window::show() const {
     ShowWindow(this->handle, SW_SHOW);
     UpdateWindow(this->handle);
-    
+
     application::get().log.debug("Window shown");
 }
 
@@ -110,7 +115,7 @@ void window::update() {
     this->ecs.update();
 
     auto& t = this->ecs.get_component<transform>(this->jiayi_logo_entity);
-    
+
     vector3 rotation = t.get_rotation();
     rotation.x += 0.53f;
     rotation.y += 0.5f;
@@ -121,10 +126,10 @@ void window::update() {
 
 void window::close() {
     this->rml.destroy();
-    
+
     this->closing = true;
     DestroyWindow(this->handle);
-    
+
     auto& app = application::get();
     if (this->main_window) {
         app.log.debug("Main window closed");
@@ -134,7 +139,7 @@ void window::close() {
     }
 
     app.log.debug("Window closed");
-    
+
     std::erase_if(app.windows, [this](const std::unique_ptr<window>& window) {
         return window->handle == this->handle;
     });
@@ -154,18 +159,17 @@ bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
     if (message == WM_SIZE) {
         UINT width = LOWORD(l_param);
         UINT height = HIWORD(l_param);
-        
+
         // do you guys like back and forth conversion
         vector2 new_size = { static_cast<float>(width), static_cast<float>(height) };
 
         renderer& rend = renderer::get_for_window(this->handle);
-        
+
         rend.resize(new_size);
         this->rml.resize(new_size, rend.get_rtv());
     }
-    
-    if (this->rml.window_procedure(this->handle, message, w_param, l_param))
-        return true;
+
+    if (this->rml.window_procedure(this->handle, message, w_param, l_param)) return true;
 
     return false; // not handled
 }
