@@ -14,7 +14,6 @@ std::string_view global_layer::layout() {
 
                 <label>
                     <input type="radio"/>
-                    &#xe88a;
                 </label>
             </div>
         </body>

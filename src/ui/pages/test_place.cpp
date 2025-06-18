@@ -18,8 +18,25 @@ std::string_view test_place::layout() {
             <div class="flex-row">
                 <button>Regular button</button>
                 <button class="less">Less important</button>
-                <button class="disabled">Disabled button</button>
+                <button disabled>Disabled button</button>
                 <button class="progress">With progress</button>
+            </div>
+
+            <div class="flex-row">
+                <div class="flex-column half-gap">
+                    <label>Text field</label>
+                    <input type="text"/>
+                </div>
+
+                <div class="flex-column half-gap">
+                    <label>With text</label>
+                    <input type="text" value="This text field has text"/>
+                </div>
+
+                <div class="flex-column half-gap">
+                    <label>Disabled text field</label>
+                    <input disabled type="text" value="No input allowed"/>
+                </div>
             </div>
         </body>
         </rml>
@@ -32,6 +49,16 @@ std::string_view test_place::styles() {
             display: flex;
             flex-direction: row;
             gap: 15px;
+        }
+
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .half-gap {
+            gap: 7px;
         }
     )";
 }

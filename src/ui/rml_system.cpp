@@ -324,19 +324,10 @@ std::string_view rml_system::get_default_styles_str() {
 			display: table-row-group;
 		}
 
-        @keyframes button-pressed {
-            from {
-                filter: drop-shadow(#0000003F 0 4px 2px) brightness(250%);
-            }
-
-            to {
-                filter: drop-shadow(#0000003F 0 4px 2px) brightness(150%);
-            }
-        }
-
 		button {
 			background-color: #CE3A3A;
             border: 2px #6A1A1A;
+            margin-bottom: 15px;
             padding: 7px 9px 7px 9px;
             border-radius: 4px;
             tab-index: auto;
@@ -344,7 +335,7 @@ std::string_view rml_system::get_default_styles_str() {
             box-sizing: border-box;
 			font-weight: 700;
             filter: drop-shadow(#0000003F 0 4px 2px) brightness(100%);
-            transition: all 0.5s quintic-out;
+            transition: all 0.3s quintic-out;
 		}
 
 		button:hover {
@@ -353,14 +344,14 @@ std::string_view rml_system::get_default_styles_str() {
 
         button:active {
             transition: none;
-            filter: drop-shadow(#0000003F 0 4px 2px) brightness(150%);
-            animation: 0.5s quintic-out button-pressed;
+            filter: drop-shadow(#0000003F 0 4px 2px) brightness(200%);
         }
 
         button.less {
 			font-weight: 500;
             background-color: transparent;
             filter: none;
+            transition: all 0.3s quintic-out;
         }
 
 		button.less:hover {
@@ -369,12 +360,10 @@ std::string_view rml_system::get_default_styles_str() {
 
         button.less:active {
             transition: none;
-            filter: drop-shadow(#0000003F 0 4px 2px) brightness(150%);
-            animation: 0.5s quintic-out button-pressed;
+            filter: brightness(200%);
         }
 
-
-        button.disabled {
+        button[disabled] {
             font-weight: 500;
             background-color: transparent;
             border-color: #6C6C6C;
@@ -383,11 +372,11 @@ std::string_view rml_system::get_default_styles_str() {
             filter: none;
         }
 
-        button.disabled:hover {
+        button[disabled]:hover {
             filter: none;
         }
 
-        button.disabled:active {
+        button[disabled]:active {
             animation: none;
         }
 
@@ -396,15 +385,42 @@ std::string_view rml_system::get_default_styles_str() {
         }
 
 		input.text {
-            background-color: #FFFFFF;
-            color: #000000;
-            border: 2px #999999;
-            padding: 5px;
+            background-color: #FFFFFF0C;
+            border: 2px #FFFFFF1C;
+            border-radius: 4px;
+            padding: 7px 9px 7px 9px;
             tab-index: auto;
             cursor: text;
             box-sizing: border-box;
-            width: 200px;
-			font-size: 14px;
+            width: 225px;
+			font-weight: 500;
+            filter: drop-shadow(#000000FF 0 4px 2px) brightness(100%);
+            transition: all 0.3s quintic-out;
+        }
+
+		input.text:hover {
+			filter: drop-shadow(#000000FF 0 4px 2px) brightness(120%);
+		}
+
+        input.text:active {
+            transition: none;
+            filter: drop-shadow(#000000FF 0 4px 2px) brightness(200%);
+        }
+
+        input.text[disabled] {
+            background-color: transparent;
+            border-color: #6C6C6C;
+            color: #6C6C6C;
+            cursor: unavailable;
+            filter: none;
+        }
+
+        input.text.disabled:hover {
+            filter: none;
+        }
+
+        input.text.disabled:active {
+            animation: none;
         }
     )";
 }
