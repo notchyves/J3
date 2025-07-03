@@ -8,7 +8,7 @@ class resource_manager {
     struct storage {
         static inline std::unique_ptr<resource_pool<T>> pool;
     };
-    
+
 public:
     template <typename T, typename... args>
     std::shared_ptr<T> add(const std::string& name, args&&... a);
@@ -35,8 +35,7 @@ std::shared_ptr<T> resource_manager::get(const std::string& name) {
 
 template <typename T>
 std::unique_ptr<resource_pool<T>>& resource_manager::get_pool() {
-    if (storage<T>::pool == nullptr)
-        storage<T>::pool = std::make_unique<resource_pool<T>>();
+    if (storage<T>::pool == nullptr) storage<T>::pool = std::make_unique<resource_pool<T>>();
 
     return storage<T>::pool;
 }

@@ -7,7 +7,7 @@ class service_collection {
     struct storage {
         static inline std::shared_ptr<service_t> service = nullptr;
     };
-    
+
 public:
     template <std::derived_from<service>... services_t>
     void add();
