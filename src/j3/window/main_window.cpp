@@ -25,7 +25,7 @@ main_window::main_window(HINSTANCE instance, const std::wstring& title, vector2 
 }
 void main_window::update() {
     window::update(); // allow ECS to update
-    
+
     auto& t = this->ecs.get_component<transform>(this->jiayi_logo_entity);
 
     vector3 rotation = t.get_rotation();
@@ -34,5 +34,4 @@ void main_window::update() {
     rotation.z += 0.5f;
 
     t.set_rotation(rotation);
-
 }

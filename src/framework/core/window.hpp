@@ -17,7 +17,7 @@ public:
     void finish_create(HINSTANCE instance, const std::wstring& title, vector2 position, vector2 size);
 
     void show() const;
-    
+
     virtual void update();
     virtual void close();
 

@@ -28,10 +28,10 @@ public:
 
     template <std::derived_from<window> T>
     std::unique_ptr<window>& create_window(const std::wstring& title, vector2 size);
-    
+
     template <std::derived_from<window> T>
     std::unique_ptr<window>& create_window(const std::wstring& title, vector2 position, vector2 size);
-    
+
     std::unique_ptr<window>& get_main_window();
     
 private:
