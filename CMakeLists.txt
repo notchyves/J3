@@ -38,6 +38,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/obj)
 # define common folders
 set(OBJ_DIR ${CMAKE_CURRENT_SOURCE_DIR}/obj)
 set(TOOL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+set(RESOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 
 file(GLOB VERTEX_SHADERS CONFIGURE_DEPENDS "resources/shaders/*.vs.hlsl")
 file(GLOB PIXEL_SHADERS CONFIGURE_DEPENDS "resources/shaders/*.ps.hlsl")
@@ -94,15 +95,12 @@ add_shaders(SHADER_OUTPUTS ${VERTEX_SHADERS} ${PIXEL_SHADERS})
 ### resources
 
 file(GLOB_RECURSE INTERMEDIARIES CONFIGURE_DEPENDS "obj/*")
-
-# all resources except shaders get embedded into the executable
-file(GLOB_RECURSE RESOURCES CONFIGURE_DEPENDS "resources/*")
-list(FILTER RESOURCES EXCLUDE REGEX "resources/shaders/*")
-
 add_resources(RESOURCE_OBJECTS
         ${INTERMEDIARIES}
-        ${RESOURCES}
 )
+
+# all resources except shaders get copied to the output directory
+file(COPY ${RESOURCE_DIR} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ### exe
 

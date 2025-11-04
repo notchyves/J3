@@ -2,7 +2,6 @@
 #include "common.hpp"
 
 #include "framework/resource/resource.hpp"
-#include "interface/file/embedded_file_interface.hpp"
 #include "interface/font/FontEngineInterfaceHarfBuzz.h"
 #include "interface/render/dxtk_render_interface.hpp"
 
@@ -46,7 +45,6 @@ private:
     winrt::com_ptr<ID3D11RenderTargetView> render_target_view;
 
     Rml::UniquePtr<dxtk_render_interface> render_interface;
-    Rml::UniquePtr<embedded_file_interface> file_interface;
     Rml::UniquePtr<SystemInterface_Win32> system_interface;
     Rml::UniquePtr<FontEngineInterfaceHarfBuzz> font_engine;
 
@@ -57,17 +55,14 @@ private:
 
 template <typename page_t>
 void rml_system::register_page() {
-    new (&storage<page_t>::page) page_t();
-
     Rml::DataModelConstructor dmc = this->context->CreateDataModel(Rml::String(page_t::name.c_str()) + "_data");
     storage<page_t>::page.initialize(dmc);
 
     Rml::ElementDocument* document =
-        this->context->LoadDocumentFromMemory(Rml::String(page_t::rml().str()), page_t::name.c_str());
+        this->context->LoadDocument(page_t::path.str());
     if (!document) return;
 
-    const Rml::SharedPtr<Rml::StyleSheetContainer> custom_styles =
-        Rml::Factory::InstanceStyleSheetString(Rml::String(page_t::css().str()));
+    const auto custom_styles = document->GetStyleSheetContainer();
     const Rml::SharedPtr<Rml::StyleSheetContainer> combined_styles =
         this->default_styles->CombineStyleSheetContainer(*custom_styles);
     document->SetStyleSheetContainer(combined_styles);

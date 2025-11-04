@@ -5,8 +5,6 @@
 #include "framework/system/render/renderer.hpp"
 #include "j3/view/sidebar.hpp"
 
-LOAD_RESOURCE(resources_models_jiayi_logo_obj)
-
 main_window::main_window(HINSTANCE instance, const std::wstring& title, vector2 size, bool main_window)
     : window(instance, title, size, main_window) {
     auto& app = application::get();
@@ -14,7 +12,7 @@ main_window::main_window(HINSTANCE instance, const std::wstring& title, vector2 
     this->set_background_color({ 0.058f, 0.058f, 0.058f, 1 });
 
     // create resources
-    std::vector<mesh> jiayi_logo_model = mesh::load(GET_RESOURCE(resources_models_jiayi_logo_obj));
+    std::vector<mesh> jiayi_logo_model = mesh::load("resources/models/jiayi_logo.obj");
     auto jiayi_logo = app.resources.add<mesh>("jiayi_logo", jiayi_logo_model[0]);
 
     // jiayi logo

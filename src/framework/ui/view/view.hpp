@@ -2,9 +2,12 @@
 #include "common.hpp"
 #include "framework/ui/controller/controller.hpp"
 
-template <std::derived_from<controller> T>
+template <hat::fixed_string N, std::derived_from<controller> T>
 class view {
 public:
+    static constexpr hat::fixed_string name = N;
+    static constexpr hat::fixed_string path = "resources/ui/rml/" + name + ".rml";
+    
     virtual ~view() = default;
 
     void initialize(Rml::DataModelConstructor& dmc);
@@ -17,7 +20,7 @@ private:
     }
 };
 
-template <std::derived_from<controller> T>
-void view<T>::initialize(Rml::DataModelConstructor& dmc) {
+template <hat::fixed_string N, std::derived_from<controller> T>
+void view<N, T>::initialize(Rml::DataModelConstructor& dmc) {
     get_controller().bind_data(dmc);
 }

@@ -4,9 +4,6 @@
 
 #include "framework/resource/resource.hpp"
 
-LOAD_RESOURCE(resources_fonts_Montserrat_ttf)
-LOAD_RESOURCE(resources_fonts_MontserratItalic_ttf)
-
 void rml_system::initialize(
     HWND handle, vector2 size, const winrt::com_ptr<ID3D11Device>& device,
     const winrt::com_ptr<ID3D11RenderTargetView>& rtv
@@ -26,9 +23,6 @@ void rml_system::initialize(
     this->font_engine = Rml::MakeUnique<FontEngineInterfaceHarfBuzz>();
     Rml::SetFontEngineInterface(this->font_engine.get());
 
-    this->file_interface = Rml::MakeUnique<embedded_file_interface>();
-    Rml::SetFileInterface(this->file_interface.get());
-
     // add languages (BCP47 code for language, ISO15924 code for script... then text direction obviously)
     this->font_engine->RegisterLanguage("en", "Latn", TextFlowDirection::LeftToRight);
 
@@ -42,22 +36,10 @@ void rml_system::initialize(
     Rml::Debugger::Initialise(this->context);
 #endif
 
-    const resource montserrat = GET_RESOURCE(resources_fonts_Montserrat_ttf);
-    const resource montserrat_italic = GET_RESOURCE(resources_fonts_MontserratItalic_ttf);
+    Rml::LoadFontFace("resources/fonts/Montserrat.ttf");
+    Rml::LoadFontFace("resources/fonts/MontserratItalic.ttf");
 
-    Rml::LoadFontFace(
-        Rml::Span(std::bit_cast<const unsigned char*>(montserrat.data()), montserrat.size()),
-        Rml::String(),
-        Rml::Style::FontStyle::Normal
-    );
-    Rml::LoadFontFace(
-        Rml::Span(std::bit_cast<const unsigned char*>(montserrat_italic.data()), montserrat_italic.size()),
-        Rml::String(),
-        Rml::Style::FontStyle::Italic
-    );
-
-    const resource default_css = GET_RESOURCE(resources_ui_css_default_css);
-    this->default_styles = Rml::Factory::InstanceStyleSheetString(Rml::String(default_css.str()));
+    this->default_styles = Rml::Factory::InstanceStyleSheetFile("resources/ui/css/default.css");
 }
 
 void rml_system::update() {
