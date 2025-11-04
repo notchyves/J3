@@ -1,6 +1,7 @@
 <rml>
     <head>
         <title>J3 sidebar</title>
+        <link type="text/rcss" href="../css/default.rcss"/>
         <link type="text/rcss" href="../css/sidebar.rcss"/>
     </head>
     <body>

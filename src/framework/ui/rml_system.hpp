@@ -5,6 +5,7 @@
 #include "interface/font/FontEngineInterfaceHarfBuzz.h"
 #include "interface/render/dxtk_render_interface.hpp"
 
+#include <RmlUi/Core/Input.h>
 #include <RmlUi_Platform_Win32.h>
 
 LOAD_RESOURCE(resources_ui_css_default_css)
@@ -32,10 +33,21 @@ struct rml_system {
     void hide_page();
 
 private:
+    class refresh_listener : public Rml::EventListener {
+    public:
+        void ProcessEvent(Rml::Event& event) override {
+            Rml::Input::KeyIdentifier key = event.GetParameter("key_identifier", Rml::Input::KeyIdentifier::KI_UNKNOWN);
+            if (key == Rml::Input::KI_F5) {
+                event.GetTargetElement()->GetOwnerDocument()->ReloadStyleSheet();
+            }
+        }
+    };
+
     template <typename page_t>
     struct storage {
         static inline page_t page;
         static inline Rml::ElementDocument* document = nullptr;
+        static inline refresh_listener refresh_listener;
     };
 
     HWND window_handle = nullptr;
@@ -49,7 +61,6 @@ private:
     Rml::UniquePtr<FontEngineInterfaceHarfBuzz> font_engine;
 
     Rml::Context* context = nullptr;
-    Rml::SharedPtr<Rml::StyleSheetContainer> default_styles;
     Rml::UniquePtr<TextInputMethodEditor_Win32> ime;
 };
 
@@ -61,10 +72,7 @@ void rml_system::register_page() {
     Rml::ElementDocument* document = this->context->LoadDocument(page_t::path.str());
     if (!document) return;
 
-    const auto custom_styles = document->GetStyleSheetContainer();
-    const Rml::SharedPtr<Rml::StyleSheetContainer> combined_styles =
-        this->default_styles->CombineStyleSheetContainer(*custom_styles);
-    document->SetStyleSheetContainer(combined_styles);
+    document->AddEventListener(Rml::EventId::Keydown, &storage<page_t>::refresh_listener);
 
     storage<page_t>::document = document;
     storage<page_t>::page.after_load();

@@ -38,8 +38,6 @@ void rml_system::initialize(
 
     Rml::LoadFontFace("resources/fonts/Montserrat.ttf");
     Rml::LoadFontFace("resources/fonts/MontserratItalic.ttf");
-
-    this->default_styles = Rml::Factory::InstanceStyleSheetFile("resources/ui/css/default.css");
 }
 
 void rml_system::update() {
@@ -71,6 +69,6 @@ bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_par
         Rml::Debugger::SetVisible(!Rml::Debugger::IsVisible());
     }
 #endif
-    
+
     return !RmlWin32::WindowProcedure(this->context, *this->ime, window_handle, message, w_param, l_param);
 }
