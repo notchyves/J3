@@ -22,7 +22,7 @@ public:
     virtual void close();
 
     bool get_focused() const;
-    
+
     void set_background_color(const vector4& color) const;
     
     bool window_proc(UINT message, WPARAM w_param, LPARAM l_param);
