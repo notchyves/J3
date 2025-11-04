@@ -58,8 +58,7 @@ void rml_system::register_page() {
     Rml::DataModelConstructor dmc = this->context->CreateDataModel(Rml::String(page_t::name.c_str()) + "_data");
     storage<page_t>::page.initialize(dmc);
 
-    Rml::ElementDocument* document =
-        this->context->LoadDocument(page_t::path.str());
+    Rml::ElementDocument* document = this->context->LoadDocument(page_t::path.str());
     if (!document) return;
 
     const auto custom_styles = document->GetStyleSheetContainer();

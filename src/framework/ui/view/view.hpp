@@ -7,7 +7,7 @@ class view {
 public:
     static constexpr hat::fixed_string name = N;
     static constexpr hat::fixed_string path = "resources/ui/rml/" + name + ".rml";
-    
+
     virtual ~view() = default;
 
     void initialize(Rml::DataModelConstructor& dmc);
