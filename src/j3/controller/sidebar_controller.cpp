@@ -6,6 +6,6 @@ void sidebar_controller::bind_data(Rml::DataModelConstructor& dmc) {
     dmc.Bind("archives_selected", &this->model.archives_selected);
     dmc.Bind("versions_selected", &this->model.versions_selected);
     dmc.Bind("settings_selected", &this->model.settings_selected);
-    
+
     dmc.Bind("pinned", &this->model.pinned);
 }
