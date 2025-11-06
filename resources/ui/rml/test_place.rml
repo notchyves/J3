@@ -1,11 +1,11 @@
 <rml>
-    <head>
-        <title>J3 - test place</title>
-        <link type="text/rcss" href="../css/default.rcss">
-        <link type="text/rcss" href="../css/test_place.rcss">
-    </head>
+<head>
+    <title>J3 - test place</title>
+    <link type="text/rcss" href="../css/default.rcss"/>
+    <link type="text/rcss" href="../css/test_place.rcss"/>
+</head>
 
-    <body>
+<body>
     <h1>Header 1</h1>
     <h2>Header 2</h2>
     <h3>Header 3</h3>
@@ -58,5 +58,5 @@
             </div>
         </div>
     </div>
-    </body>
+</body>
 </rml>
