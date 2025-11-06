@@ -2,3 +2,4 @@
 /obj
 /.idea
 /cpm-cache
+/cmake-build-*

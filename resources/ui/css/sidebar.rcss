@@ -48,6 +48,20 @@ h1 {
     transition: all 0.3s quintic-out;
 }
 
+.sidebar-item:hover {
+    background-color: #FFFFFF0C;
+}
+
+.sidebar-item.selected:hover {
+    background-color: #CE3A3A14;
+    filter: brightness(120%);
+}
+
+.sidebar-item:active {
+    transition: none;
+    filter: brightness(200%);
+}
+
 .selected {
     background-color: #CE3A3A14;
     border-left: 3px #CE3A3A;

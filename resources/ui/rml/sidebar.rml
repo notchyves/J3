@@ -10,24 +10,24 @@
         <h1>J3</h1>
     
         <form class="sidebar-main">
-            <label class="sidebar-item" data-class-selected="home_selected">
-                <input type="radio" id="sidebar-home" data-value="home_selected" checked/>
+            <label class="sidebar-item" data-class-selected="selected_tab == 0">
+                <input type="radio" id="sidebar-home" data-event-click="selected_tab = 0"/>
             </label>
 
-            <label class="sidebar-item" data-class-selected="mods_selected">
-                <input type="radio" id="sidebar-mods" data-value="mods_selected"/>
+            <label class="sidebar-item" data-class-selected="selected_tab == 1">
+                <input type="radio" id="sidebar-mods" data-event-click="selected_tab = 1"/>
             </label>
 
-            <label class="sidebar-item" data-class-selected="archives_selected">
-                <input type="radio" id="sidebar-archives" data-value="archives_selected"/>
+            <label class="sidebar-item" data-class-selected="selected_tab == 2">
+                <input type="radio" id="sidebar-archives" data-event-click="selected_tab = 2"/>
             </label>
 
-            <label class="sidebar-item" data-class-selected="versions_selected">
-                <input type="radio" id="sidebar-versions" data-value="versions_selected"/>
+            <label class="sidebar-item" data-class-selected="selected_tab == 3">
+                <input type="radio" id="sidebar-versions" data-event-click="selected_tab = 3"/>
             </label>
 
-            <label class="sidebar-item" data-class-selected="settings_selected">
-                <input type="radio" id="sidebar-settings" data-value="settings_selected"/>
+            <label class="sidebar-item" data-class-selected="selected_tab == 4">
+                <input type="radio" id="sidebar-settings" data-event-click="selected_tab = 4"/>
             </label>
         </form>
     </div>
