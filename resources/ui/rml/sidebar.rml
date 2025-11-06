@@ -11,23 +11,23 @@
     
         <form class="sidebar-main">
             <label class="sidebar-item" data-class-selected="home_selected">
-                <input type="radio" id="sidebar-home" data-value="home_selected" checked/> Home
+                <input type="radio" id="sidebar-home" data-value="home_selected" checked/>
             </label>
 
             <label class="sidebar-item" data-class-selected="mods_selected">
-                <input type="radio" id="sidebar-mods" data-value="mods_selected"/> Mods
+                <input type="radio" id="sidebar-mods" data-value="mods_selected"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="archives_selected">
-                <input type="radio" id="sidebar-archives" data-value="archives_selected"/> Archives
+                <input type="radio" id="sidebar-archives" data-value="archives_selected"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="versions_selected">
-                <input type="radio" id="sidebar-versions" data-value="versions_selected"/> Versions
+                <input type="radio" id="sidebar-versions" data-value="versions_selected"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="settings_selected">
-                <input type="radio" id="sidebar-settings" data-value="settings_selected"/> Settings
+                <input type="radio" id="sidebar-settings" data-value="settings_selected"/>
             </label>
         </form>
     </div>

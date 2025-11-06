@@ -16,7 +16,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     backdrop-filter: drop-shadow(#000000 0 4px 2px);
     transition: all 0.3s quintic-out;
 }
@@ -29,10 +29,6 @@ body {
     width: 200px;
 }
 
-.sidebar:hover .sidebar-main .sidebar-item {
-    width: 197px;
-}
-
 h1 {
     color: #CE3A3A;
     margin: 15px 15px 15px 14px;
@@ -43,10 +39,10 @@ h1 {
 }
 
 .sidebar-item {
-    width: 64px;
+    width: 200px;
     height: 64px;
-    font-size: 24px;
-    font-weight: normal;
+    font-size: 16px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     transition: all 0.3s quintic-out;
@@ -55,7 +51,7 @@ h1 {
 .selected {
     background-color: #CE3A3A14;
     border-left: 3px #CE3A3A;
-    width: 61px;
+    width: 197px;
 }
 
 .sidebar-item:last-child {
@@ -63,35 +59,39 @@ h1 {
 }
 
 .sidebar-item input {
-    width: 24px;
+    width: 100%;
     height: 24px;
     padding: 20px;
+}
+
+.sidebar-item.selected input {
+    padding-left: 17px;
 }
 
 .sidebar-main {
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
 }
 
 #sidebar-home {
-    decorator: image("../../textures/home.png" scale-none);
+    decorator: image("../../textures/home.png" scale-none left center) content-box, text("Home" 64px);
 }
 
 #sidebar-mods {
-    decorator: image("../../textures/mod.png" scale-none);
+    decorator: image("../../textures/mod.png" scale-none left center) content-box, text("Mods" 64px);
 }
 
 #sidebar-archives {
-    decorator: image("../../textures/archive.png" scale-none);
+    decorator: image("../../textures/archive.png" scale-none left center) content-box, text("Archives" 64px);
 }
 
 #sidebar-versions {
-    decorator: image("../../textures/version.png" scale-none);
+    decorator: image("../../textures/version.png" scale-none left center) content-box, text("Versions" 64px);
 }
 
 #sidebar-settings {
-    decorator: image("../../textures/settings.png" scale-none);
+    decorator: image("../../textures/settings.png" scale-none left center) content-box, text("Settings" 64px);
 }
