@@ -60,9 +60,7 @@ void application::run() {
     while (running) {
         bool has_message = get_message(
             message,
-            main_window->get_focused()
-                ? static_cast<UINT>(Rml::Math::Min(Rml::GetContext("main")->GetNextUpdateDelay(), 10.0) * 1000)
-                : 10000
+            static_cast<UINT>(Rml::Math::Min(Rml::GetContext("main")->GetNextUpdateDelay(), 10.0) * 1000)
         );
 
         while (has_message) {
