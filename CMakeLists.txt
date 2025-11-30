@@ -18,13 +18,13 @@ set(ASSIMP_WARNINGS_AS_ERRORS OFF)
 
 ### dependencies
 
-CPMAddPackage("gh:gabime/spdlog@1.15.3")
-CPMAddPackage("gh:skypjack/entt@3.15.0")
-CPMAddPackage("gh:microsoft/DirectXTK#mar2025")
-CPMAddPackage("https://gitlab.freedesktop.org/freetype/freetype.git#VER-2-13-3")
-CPMAddPackage("gh:harfbuzz/harfbuzz#11.2.1")
+CPMAddPackage("gh:gabime/spdlog@1.16.0")
+CPMAddPackage("gh:skypjack/entt@3.16.0")
+CPMAddPackage("gh:microsoft/DirectXTK#oct2025")
+CPMAddPackage("https://gitlab.freedesktop.org/freetype/freetype.git#VER-2-14-1")
+CPMAddPackage("gh:harfbuzz/harfbuzz#12.2.0")
 CPMAddPackage("gh:assimp/assimp@6.0.2")
-CPMAddPackage("gh:BasedInc/libhat#fbe02c7b192f0fe9bfb89690811790cb64404137")
+CPMAddPackage("gh:BasedInc/libhat@0.9.0")
 
 # define alias for freetype so RmlUi can find it
 add_library(Freetype::Freetype ALIAS freetype)
@@ -112,20 +112,29 @@ add_compile_options("/MP $<$<CONFIG:Release>:/clang:-flto=thin /clang:-Oz>")
 include_directories(src)
 target_precompile_headers(j3 PRIVATE src/common.hpp)
 
-# RmlUi backend stuff
+# RmlUi DX11 backend
 set(RMLUI_BACKEND_PATH ${RmlUi_SOURCE_DIR}/Backends)
 add_library(rmlui_backend_WIN32_DX11 INTERFACE)
-target_sources(rmlui_backend_WIN32_DX11 INTERFACE
-        ${RMLUI_BACKEND_PATH}/RmlUi_Platform_Win32.cpp
-        ${RMLUI_BACKEND_PATH}/RmlUi_Renderer_DX11.cpp
+
+target_sources(rmlui_backend_WIN32_DX11 INTERFACE 
+    ${RMLUI_BACKEND_PATH}/RmlUi_Platform_Win32.cpp
+    ${RMLUI_BACKEND_PATH}/RmlUi_Renderer_DX11.cpp
 )
+
 target_include_directories(rmlui_backend_WIN32_DX11 INTERFACE ${RMLUI_BACKEND_PATH})
 
-# include private RmlUi Core headers to make harfbuzz integration work
-# we gotta do this until harfbuzz is officially merged
-target_include_directories(j3 PRIVATE ${RmlUi_SOURCE_DIR}/Source/Core)
+# RmlUi harfbuzz font engine
+set(RMLUI_HARFBUZZ_PATH ${RmlUi_SOURCE_DIR}/Samples/basic/harfbuzz/src)
+add_library(rmlui_font_engine_harfbuzz INTERFACE)
 
-target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 harfbuzz assimp libhat d3d11 dxgi d3dcompiler dwmapi)
+file(GLOB RMLUI_HARFBUZZ_SOURCES ${RMLUI_HARFBUZZ_PATH}/*.cpp ${RMLUI_HARFBUZZ_PATH}/*.h)
+list(FILTER RMLUI_HARFBUZZ_SOURCES EXCLUDE REGEX "main.cpp")
+target_sources(rmlui_font_engine_harfbuzz INTERFACE ${RMLUI_HARFBUZZ_SOURCES})
+
+target_include_directories(rmlui_font_engine_harfbuzz INTERFACE ${RmlUi_SOURCE_DIR}/Source/Core)
+include_directories(${RMLUI_HARFBUZZ_PATH})
+
+target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 rmlui_font_engine_harfbuzz harfbuzz assimp libhat d3d11 dxgi d3dcompiler dwmapi)
 
 target_compile_definitions(j3 PRIVATE UNICODE)
 target_compile_definitions(j3 PRIVATE WINDOW_CLASS_NAME=L"j3window")

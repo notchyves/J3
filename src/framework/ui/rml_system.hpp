@@ -2,11 +2,11 @@
 #include "common.hpp"
 
 #include "framework/resource/resource.hpp"
-#include "interface/font/FontEngineInterfaceHarfBuzz.h"
 #include "interface/render/dxtk_render_interface.hpp"
 
 #include <RmlUi/Core/Input.h>
 #include <RmlUi_Platform_Win32.h>
+#include <FontEngineInterfaceHarfBuzz.h>
 
 struct rml_system {
     void initialize(
