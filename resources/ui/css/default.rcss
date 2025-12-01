@@ -293,6 +293,7 @@ input.range {
     width: 250px;
     background-color: transparent;
     cursor: pointer;
+    tab-index: auto;
 }
 
 input.range slidertrack {
@@ -361,6 +362,7 @@ input.checkbox {
     background-color: #FFFFFF0C;
     border: 2px #FFFFFF1C;
     border-radius: 4px;
+    tab-index: auto;
     cursor: pointer;
     filter: drop-shadow(#000000FF 0 4px 2px) brightness(100%);
     transition: all 0.3s quintic-out;
@@ -390,4 +392,98 @@ input.checkbox[checked]:hover {
 input.checkbox[checked]:active {
     transition: none;
     filter: drop-shadow(#0000003F 0 4px 2px) brightness(200%);
+}
+
+input.radio {
+    width: 16px;
+    height: 16px;
+    background-color: #FFFFFF0C;
+    border: 2px #FFFFFF1C;
+    border-radius: 8px;
+    tab-index: auto;
+    cursor: pointer;
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(100%);
+    transition: all 0.3s quintic-out;
+}
+
+input.radio[checked] {
+    background-color: #CE3A3A;
+    border: 2px #6A1A1A;
+    border-radius: 8px;
+    filter: drop-shadow(#0000003F 0 4px 2px) brightness(100%);
+}
+
+input.radio:hover {
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(120%);
+}
+
+input.radio:active {
+    transition: none;
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(200%);
+}
+
+input.radio[checked]:hover {
+    filter: drop-shadow(#0000003F 0 4px 2px) brightness(120%);
+}
+
+input.radio[checked]:active {
+    transition: none;
+    filter: drop-shadow(#0000003F 0 4px 2px) brightness(200%);
+}
+
+.drop-down {
+    tab-index: auto;
+}
+
+.drop-down .drop-down-selected {
+    max-height: 38px;
+    background-color: #FFFFFF0C;
+    border: 2px #FFFFFF1C;
+    border-radius: 4px;
+    padding: 7px 9px 7px 9px;
+    font-weight: 500;
+    box-sizing: border-box;
+    cursor: pointer;
+    z-index: 3;
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(100%);
+    transition: all 0.3s quintic-out;
+}
+
+.drop-down .drop-down-selected:hover {
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(120%);
+}
+
+.drop-down .drop-down-selected:active {
+    transition: none;
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(200%);
+}
+
+.drop-down .drop-down-selected img {
+    width: 20px;
+    height: 20px;
+}
+
+.drop-down .drop-down-items {
+    margin-top: -2px;
+    background-color: #FFFFFF0C;
+    border: 2px #FFFFFF1C;
+    border-top: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 7px 9px 7px 9px;
+    box-sizing: border-box;
+    filter: drop-shadow(#000000FF 0 4px 2px) brightness(100%);
+    transition: all 0.3s quintic-out;
+}
+
+.drop-down .drop-down-items[open="1"] {
+    transform: translateY(0px);
+    opacity: 100%;
+    visibility: visible;
+}
+
+.drop-down .drop-down-items[open="0"] {
+    transform: translateY(-38px);
+    opacity: 0;
+    visibility: hidden;
 }

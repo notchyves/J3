@@ -78,6 +78,24 @@ h1 {
     width: 100%;
     height: 24px;
     padding: 20px;
+    background-color: transparent;
+    border: 0px transparent;
+    border-radius: 0;
+    filter: none;
+}
+
+.sidebar-item input:hover {
+    background-color: transparent;
+    border: 0px transparent;
+    border-radius: 0;
+    filter: none;
+}
+
+.sidebar-item input[checked] {
+    background-color: transparent;
+    border: 0px transparent;
+    border-radius: 0;
+    filter: none;
 }
 
 .sidebar-item.selected input {

@@ -5,7 +5,7 @@
     <link type="text/rcss" href="../css/test_place.rcss"/>
 </head>
 
-<body>
+<body data-model="test_place_data">
     <h1>Header 1</h1>
     <h2>Header 2</h2>
     <h3>Header 3</h3>
@@ -59,6 +59,24 @@
                 <div class="flex-row half-gap">
                     <input type="checkbox" id="check2" checked/>
                     <label for="check2">Toggled checkbox</label>
+                </div>
+            </div>
+
+            <div class="drop-down">
+                <div class="drop-down-selected flex-row space-between" data-event-click="drop_down_open = !drop_down_open">
+                    <i data-if="drop_down_selected_items.size == 0">{{drop_down_name}}</i>
+                    <p data-if="drop_down_selected_items.size > 0">{{drop_down_selected_items_formatted}}</p>
+
+                    <img src="../../textures/arrow_down.png" width="20" height="20"/>
+                </div>
+                
+                <div class="drop-down-items flex-column half-gap" data-attr-open="drop_down_open">
+                    <div class="flex-row half-gap" data-for="item : drop_down_items">
+                        <input type="checkbox" id="get_item_id(item)" data-if="drop_down_multiselect" data-event-change="drop_down_toggle(item)"/>
+                        <input type="radio" id="get_item_id(item)" data-if="!drop_down_multiselect" data-event-change="drop_down_toggle(item)"/>
+                        
+                        <label for="get_item_id(item)">{{item}}</label>
+                    </div>
                 </div>
             </div>
         </div>

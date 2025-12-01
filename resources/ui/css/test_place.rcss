@@ -14,6 +14,10 @@
     gap: 7px;
 }
 
+.space-between {
+    justify-content: space-between;
+}
+
 .third-width {
     width: 30%;
 }
