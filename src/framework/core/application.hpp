@@ -3,13 +3,11 @@
 
 #include "framework/resource/resource_manager.hpp"
 #include "framework/service/service_collection.hpp"
-#include "log.hpp"
 #include "timer.hpp"
 #include "window.hpp"
 
 class application {
 public:
-    class log log;
     timer time;
     std::vector<std::unique_ptr<window>> windows;
     resource_manager resources;

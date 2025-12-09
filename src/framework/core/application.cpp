@@ -3,17 +3,57 @@
 #include "framework/service/internet/internet.hpp"
 #include "special_folder.hpp"
 
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/dup_filter_sink.h>
+#include <spdlog/sinks/msvc_sink.h>
+#include <spdlog/sinks/stdout_sinks.h>
+
 alignas(application) char application_buffer[sizeof(application)];
 
 application::application(const HINSTANCE instance) {
-    const std::filesystem::path log_folder = special_folder::get(FOLDERID_LocalAppData) / "J3" / "Logs";
-    this->log.init(log_folder);
-
     this->instance = instance;
-    this->log.info("Application start");
+    
+    const std::filesystem::path log_folder = special_folder::get(FOLDERID_LocalAppData) / "J3" / "Logs";
+    auto dup_filter = std::make_shared<spdlog::sinks::dup_filter_sink_mt>(std::chrono::seconds(2));
+    
+    const auto msvc_sink = std::make_shared<spdlog::sinks::msvc_sink_mt>();
+    const auto stdout_sink = std::make_shared<spdlog::sinks::stdout_sink_mt>();
+
+    const std::filesystem::path log_file = log_folder / "Current.log";
+    const std::filesystem::path previous_logs_folder = log_folder / "Previous";
+
+    // creates all required directories at once
+    std::filesystem::create_directories(previous_logs_folder);
+
+    if (std::filesystem::exists(log_file)) {
+        const auto creation_time = std::filesystem::last_write_time(log_file).time_since_epoch();
+        const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(creation_time);
+        std::string time_str = std::to_string(seconds.count());
+
+        std::filesystem::path previous_log_file = previous_logs_folder / (time_str + ".log");
+        MoveFile(log_file.c_str(), previous_log_file.c_str());
+    }
+    
+    const auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file.string());
+
+    dup_filter->add_sink(msvc_sink);
+    dup_filter->add_sink(stdout_sink);
+    dup_filter->add_sink(file_sink);
+
+    spdlog::default_logger()->sinks().emplace_back(dup_filter);
+
+#ifdef NDEBUG
+    spdlog::set_level(spdlog::level::info);
+    spdlog::flush_on(spdlog::level::info);
+#else // debug
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::flush_on(spdlog::level::debug);
+#endif
+
+    spdlog::info("Application start");
 
     winrt::init_apartment();
-    this->log.debug("Initialized WinRT apartment");
+    spdlog::debug("Initialized WinRT apartment");
 
     // get icon because i don't want to load one from a file
     std::array<wchar_t, MAX_PATH> module_path = {};
@@ -33,13 +73,13 @@ application::application(const HINSTANCE instance) {
 
     ATOM atom = RegisterClassEx(&window_class);
     if (atom == 0) {
-        this->log.critical("Registering window class failed with result 0x{:08X}", GetLastError());
+        spdlog::critical("Registering window class failed with result 0x{:08X}", GetLastError());
         this->quit(-1);
         return;
     }
 
-    this->log.debug("Window class registered for application");
-    this->log.debug("Application singleton initialized");
+    spdlog::debug("Window class registered for application");
+    spdlog::debug("Application singleton initialized");
 }
 
 application& application::get() { return *std::launder(reinterpret_cast<application*>(application_buffer)); }
@@ -55,7 +95,7 @@ void application::run() {
     main_window->show();
 
     // window loop
-    this->log.info("Now running");
+    spdlog::info("Now running");
     MSG message = {};
     while (running) {
         bool has_message = get_message(
@@ -83,16 +123,16 @@ void application::run() {
         }
     }
 
-    this->log.info("Application end");
+    spdlog::info("Application end");
 }
 
 void application::quit(const int exit_code) {
     if (!this->running) {
-        this->log.warn("Exiting immediately");
+        spdlog::warn("Exiting immediately");
         exit(exit_code);
     }
 
-    this->log.debug("Application exit requested");
+    spdlog::debug("Application exit requested");
     PostQuitMessage(exit_code);
 }
 

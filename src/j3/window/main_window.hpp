@@ -1,7 +1,7 @@
 #pragma once
 #include "common.hpp"
 
-#include "framework/core/application.hpp"
+#include "framework/core/window.hpp"
 
 class main_window : public window {
 public:

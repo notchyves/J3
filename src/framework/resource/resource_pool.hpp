@@ -21,7 +21,7 @@ public:
             return it->second;
         }
 
-        // TODO: warn here
+        spdlog::warn("Resource not found in pool: {}", name);
         return nullptr;
     }
 

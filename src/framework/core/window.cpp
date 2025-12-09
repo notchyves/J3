@@ -21,8 +21,6 @@ window::window(
 void window::finish_create(
     const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size
 ) {
-    auto& app = application::get();
-
     RECT rect;
     rect.left = 0;
     rect.top = 0;
@@ -49,11 +47,11 @@ void window::finish_create(
     );
 
     if (handle == nullptr) {
-        app.log.error("Window creation failed with result 0x{:08X}", GetLastError());
+        spdlog::error("Window creation failed with result 0x{:08X}", GetLastError());
         return;
     }
 
-    app.log.debug("Window created");
+    spdlog::debug("Window created");
 
     // set theme awareness here i guess
     BOOL value = true;
@@ -74,7 +72,7 @@ void window::finish_create(
     auto rml_entity = this->ecs.create_entity();
     ecs.add_component<rml_container>(rml_entity, this->rml);
 
-    app.log.debug("Window systems initialized");
+    spdlog::debug("Window systems initialized");
 }
 
 void window::show() const {
@@ -82,7 +80,7 @@ void window::show() const {
     SetForegroundWindow(this->handle);
     SetFocus(this->handle);
 
-    application::get().log.debug("Window shown");
+    spdlog::debug("Window shown");
 }
 
 void window::update() {
@@ -97,13 +95,13 @@ void window::close() {
 
     auto& app = application::get();
     if (this->main_window) {
-        app.log.debug("Main window closed");
+        spdlog::debug("Main window closed");
         app.windows.clear();
         app.quit();
         return; // although app terminates at this point
     }
 
-    app.log.debug("Window closed");
+    spdlog::debug("Window closed");
 
     std::erase_if(app.windows, [this](const std::unique_ptr<window>& window) {
         return window->handle == this->handle;

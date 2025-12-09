@@ -2,7 +2,6 @@
 #include "common.hpp"
 
 #include "cbuffer_types.hpp"
-#include "framework/core/application.hpp"
 
 class d3d_buffer {
 public:

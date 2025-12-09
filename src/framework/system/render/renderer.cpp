@@ -6,6 +6,7 @@
 #include "framework/component/basic/drawable.hpp"
 #include "framework/component/basic/transform.hpp"
 #include "framework/component/ui/rml_container.hpp"
+#include "framework/core/application.hpp"
 #include "framework/resource/resource.hpp"
 #include "mesh/vertex.hpp"
 
@@ -35,7 +36,7 @@ void renderer::initialize() {
     create_default_resources();
 
     renderer_map[this->window_handle] = this;
-    application::get().log.debug("Initialized renderer for a window");
+    spdlog::debug("Initialized renderer for a window");
 }
 
 void renderer::update(entt::registry& registry) {
@@ -43,7 +44,7 @@ void renderer::update(entt::registry& registry) {
 }
 
 void renderer::destroy() {
-    application::get().log.debug("Renderer destroyed");
+    spdlog::debug("Renderer destroyed");
 }
 
 void renderer::set_background_color(const vector4 col) {

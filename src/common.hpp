@@ -47,6 +47,6 @@ using quaternion = DirectX::XMFLOAT4;
 // helper macro for logging an HRESULT
     #define LOG_HRESULT(level, reason, hr) \
     if (FAILED(hr)) { \
-        application::get().log.level("{} with HRESULT: 0x{:08X}", reason, hr); \
+        spdlog::level("{} with HRESULT: 0x{:08X}", reason, hr); \
     }
 // LOG_HRESULT

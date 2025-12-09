@@ -1,7 +1,5 @@
 #include "test_place_controller.hpp"
 
-#include "framework/core/application.hpp"
-
 void test_place_controller::bind_data(Rml::DataModelConstructor& dmc) {
     dmc.RegisterArray<std::vector<Rml::String>>();
 

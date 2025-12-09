@@ -1,7 +1,5 @@
 #include "dxtk_render_interface.hpp"
 
-#include "framework/core/application.hpp"
-
 #include <WICTextureLoader.h>
 
 dxtk_render_interface::dxtk_render_interface(const winrt::com_ptr<ID3D11Device>& device) {

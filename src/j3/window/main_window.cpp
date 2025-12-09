@@ -1,6 +1,5 @@
 #include "main_window.hpp"
 
-#include "framework/system/render/renderer.hpp"
 #include "j3/view/archives.hpp"
 #include "j3/view/home.hpp"
 #include "j3/view/mods.hpp"

@@ -40,7 +40,7 @@ struct mesh {
         );
 
         if (scene == nullptr) {
-            application::get().log.error("Failed to load mesh from path: {}", path);
+            spdlog::error("Failed to load mesh from path: {}", path);
             return { };
         }
 
@@ -57,7 +57,7 @@ struct mesh {
         );
 
         if (scene == nullptr) {
-            application::get().log.error("Failed to load mesh from memory");
+            spdlog::error("Failed to load mesh from memory");
             return { };
         }
 
