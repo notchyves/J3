@@ -31,7 +31,7 @@ void window::finish_create(
 
     vector2 real_size = { static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top) };
 
-    handle = CreateWindowEx(
+    this->handle = CreateWindowEx(
         WS_EX_APPWINDOW,
         WINDOW_CLASS_NAME,
         title.c_str(),
@@ -46,7 +46,7 @@ void window::finish_create(
         nullptr
     );
 
-    if (handle == nullptr) {
+    if (this->handle == nullptr) {
         spdlog::error("Window creation failed with result 0x{:08X}", GetLastError());
         return;
     }
@@ -110,6 +110,13 @@ void window::close() {
 
 bool window::get_focused() const { return GetFocus() == this->handle; }
 
+float window::get_dip_ratio() {
+    UINT dpi = GetDpiForWindow(this->handle);
+    if (dpi == 0) dpi = USER_DEFAULT_SCREEN_DPI;
+    
+    return static_cast<float>(dpi) / static_cast<float>(USER_DEFAULT_SCREEN_DPI);
+}
+
 void window::set_background_color(const vector4& color) const {
     renderer& rend = renderer::get_for_window(this->handle);
     rend.set_background_color(color);
@@ -131,6 +138,8 @@ bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
         renderer& rend = renderer::get_for_window(this->handle);
         rend.resize(new_size);
         this->rml.resize(new_size, rend.get_rtv());
+        
+        return true;
     }
 
     if (message == WM_SIZING) {
@@ -143,6 +152,34 @@ bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
         renderer& rend = renderer::get_for_window(this->handle);
         rend.resize(new_size);
         this->rml.resize(new_size, rend.get_rtv());
+        
+        return true;
+    }
+    
+    if (message == WM_DPICHANGED) {
+        auto new_rect = reinterpret_cast<RECT*>(l_param);
+        UINT width = new_rect->right - new_rect->left;
+        UINT height = new_rect->bottom - new_rect->top;
+        
+        SetWindowPos(
+            this->handle,
+            nullptr,
+            new_rect->left,
+            new_rect->top,
+            width,
+            height,
+            SWP_NOZORDER | SWP_NOACTIVATE
+        );
+        
+        this->rml.set_dip_ratio(this->get_dip_ratio());
+
+        vector2 new_size = { static_cast<float>(width), static_cast<float>(height) };
+
+        renderer& rend = renderer::get_for_window(this->handle);
+        rend.resize(new_size);
+        this->rml.resize(new_size, rend.get_rtv());
+        
+        return true;
     }
 
     if (this->rml.window_procedure(this->handle, message, w_param, l_param)) return true;

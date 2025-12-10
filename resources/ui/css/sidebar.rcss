@@ -6,43 +6,43 @@ body {
 .sidebar {
     background-color: #1A1A1A;
     color: #D9D9D9;
-    width: 64px;
-    border-radius: 4px;
+    width: 64dp;
+    border-radius: 4dp;
     padding: 0;
     position: fixed;
-    top: 15px;
-    left: 15px;
-    bottom: 15px;
+    top: 15dp;
+    left: 15dp;
+    bottom: 15dp;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    filter: drop-shadow(#0000003F 0 4px 2px);
+    filter: drop-shadow(#0000003F 0 4dp 2dp);
     transition: all 0.3s quintic-out;
 }
 
 .sidebar:hover {
     background-color: #1A1A1A;
-    width: 200px;
+    width: 200dp;
 }
 
 .sidebar:hover .sidebar-main .sidebar-item:not(.selected) {
-    width: 200px;
+    width: 200dp;
 }
 
 h1 {
     color: #CE3A3A;
-    margin: 15px 15px 15px 14px;
+    margin: 15dp 15dp 15dp 14dp;
     font-weight: 900;
-    font-size: 32px;
+    font-size: 32dp;
     font-style: italic;
-    filter: drop-shadow(#0000003F 0 4px 2px);
+    filter: drop-shadow(#0000003F 0 4dp 2dp);
 }
 
 .sidebar-item {
-    width: 200px;
-    height: 64px;
-    font-size: 16px;
+    width: 200dp;
+    height: 64dp;
+    font-size: 16dp;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -66,8 +66,8 @@ h1 {
 
 .selected {
     background-color: #CE3A3A14;
-    border-left: 3px #CE3A3A;
-    width: 197px;
+    border-left: 3dp #CE3A3A;
+    width: 197dp;
 }
 
 .sidebar-item:last-child {
@@ -76,30 +76,30 @@ h1 {
 
 .sidebar-item input {
     width: 100%;
-    height: 24px;
-    padding: 20px;
+    height: 24dp;
+    padding: 20dp;
     background-color: transparent;
-    border: 0px transparent;
+    border: 0dp transparent;
     border-radius: 0;
     filter: none;
 }
 
 .sidebar-item input:hover {
     background-color: transparent;
-    border: 0px transparent;
+    border: 0dp transparent;
     border-radius: 0;
     filter: none;
 }
 
 .sidebar-item input[checked] {
     background-color: transparent;
-    border: 0px transparent;
+    border: 0dp transparent;
     border-radius: 0;
     filter: none;
 }
 
 .sidebar-item.selected input {
-    padding-left: 17px;
+    padding-left: 17dp;
 }
 
 .sidebar-main {
@@ -111,21 +111,21 @@ h1 {
 }
 
 #sidebar-home {
-    decorator: image("../../textures/home.png" scale-none left center) content-box, text("Home" 64px);
+    decorator: image("../../textures/home.png" scale-none left center) content-box, text("Home" 64dp);
 }
 
 #sidebar-mods {
-    decorator: image("../../textures/mod.png" scale-none left center) content-box, text("Mods" 64px);
+    decorator: image("../../textures/mod.png" scale-none left center) content-box, text("Mods" 64dp);
 }
 
 #sidebar-archives {
-    decorator: image("../../textures/archive.png" scale-none left center) content-box, text("Archives" 64px);
+    decorator: image("../../textures/archive.png" scale-none left center) content-box, text("Archives" 64dp);
 }
 
 #sidebar-versions {
-    decorator: image("../../textures/version.png" scale-none left center) content-box, text("Versions" 64px);
+    decorator: image("../../textures/version.png" scale-none left center) content-box, text("Versions" 64dp);
 }
 
 #sidebar-settings {
-    decorator: image("../../textures/settings.png" scale-none left center) content-box, text("Settings" 64px);
+    decorator: image("../../textures/settings.png" scale-none left center) content-box, text("Settings" 64dp);
 }

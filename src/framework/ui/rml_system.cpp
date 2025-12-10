@@ -61,6 +61,10 @@ void rml_system::resize(const vector2 new_size, const winrt::com_ptr<ID3D11Rende
     this->render_target_view = rtv;
 }
 
+void rml_system::set_dip_ratio(const float ratio) {
+    this->context->SetDensityIndependentPixelRatio(ratio);
+}
+
 bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) {
     if (this->ime == nullptr) return false; // prevent access of null pointer after destruction
 

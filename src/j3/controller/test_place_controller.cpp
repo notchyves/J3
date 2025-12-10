@@ -157,8 +157,8 @@ void test_place_controller::update_color_picker_marker(Rml::Element* marker, Rml
     x -= 9;
     y -= 9;
     
-    marker->SetProperty("left", fmt::format("{}px", static_cast<int>(x)));
-    marker->SetProperty("top", fmt::format("{}px", static_cast<int>(y)));
+    marker->SetProperty("left", fmt::format("{}dp", static_cast<int>(x)));
+    marker->SetProperty("top", fmt::format("{}dp", static_cast<int>(y)));
 }
 
 std::string test_place_controller::hsla_to_hex(const vector4 hsla) {

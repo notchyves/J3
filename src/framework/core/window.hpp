@@ -22,6 +22,8 @@ public:
     virtual void close();
 
     bool get_focused() const;
+    
+    float get_dip_ratio();
 
     void set_background_color(const vector4& color) const;
     

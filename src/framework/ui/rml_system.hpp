@@ -19,6 +19,7 @@ struct rml_system {
     void destroy();
 
     void resize(vector2 new_size, const winrt::com_ptr<ID3D11RenderTargetView>& rtv);
+    void set_dip_ratio(float ratio);
     bool window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
 
     template <typename page_t>

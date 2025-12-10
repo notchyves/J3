@@ -1,17 +1,17 @@
 .flex-row {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: 15dp;
 }
 
 .flex-column {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 15dp;
 }
 
 .half-gap {
-    gap: 7px;
+    gap: 7dp;
 }
 
 .space-between {
