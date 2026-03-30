@@ -1,6 +1,7 @@
 <rml>
     <head>
         <title>J3 - mods</title>
+        <link type="text/rcss" href="../css/default.rcss"/>
     </head>
     <body>
         <h1>Mods</h1>

@@ -11,23 +11,23 @@
     
         <form class="sidebar-main">
             <label class="sidebar-item" data-class-selected="selected_tab == 0">
-                <input type="radio" id="sidebar-home" data-event-click="selected_tab = 0"/>
+                <input type="radio" id="sidebar-home" data-event-click="switch_tab(0);"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="selected_tab == 1">
-                <input type="radio" id="sidebar-mods" data-event-click="selected_tab = 1"/>
+                <input type="radio" id="sidebar-mods" data-event-click="switch_tab(1);"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="selected_tab == 2">
-                <input type="radio" id="sidebar-backups" data-event-click="selected_tab = 2"/>
+                <input type="radio" id="sidebar-backups" data-event-click="switch_tab(2);"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="selected_tab == 3">
-                <input type="radio" id="sidebar-versions" data-event-click="selected_tab = 3"/>
+                <input type="radio" id="sidebar-versions" data-event-click="switch_tab(3);"/>
             </label>
 
             <label class="sidebar-item" data-class-selected="selected_tab == 4">
-                <input type="radio" id="sidebar-settings" data-event-click="selected_tab = 4"/>
+                <input type="radio" id="sidebar-settings" data-event-click="switch_tab(4);"/>
             </label>
         </form>
     </div>
