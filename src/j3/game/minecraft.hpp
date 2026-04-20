@@ -13,9 +13,12 @@ public:
     static constexpr std::wstring_view FAMILY_NAME{ L"Microsoft.MinecraftUWP_8wekyb3d8bbwe" };
     
     minecraft_version version();
+    
     std::filesystem::path install_path();
     std::filesystem::path data_path();
+    
     bool is_store_managed();
+    bool is_gdk();
     
 private:
     std::optional<AppInfo> get_app_info();

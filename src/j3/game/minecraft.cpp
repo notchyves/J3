@@ -38,13 +38,10 @@ std::filesystem::path minecraft::install_path() {
 }
 
 std::filesystem::path minecraft::data_path() {
-    minecraft_version version = this->version();
-    if (version.empty()) return { };
-    
     // data path changed since GDK (26.0)
-    return version[0] == '1' 
-        ? special_folder::get(FOLDERID_LocalAppData) / "Packages" / FAMILY_NAME
-        : special_folder::get(FOLDERID_LocalAppData) / "Minecraft Bedrock";
+    return this->is_gdk()
+        ? special_folder::get(FOLDERID_RoamingAppData) / "Minecraft Bedrock"
+        : special_folder::get(FOLDERID_LocalAppData) / "Packages" / FAMILY_NAME;
 }
 
 bool minecraft::is_store_managed() {
@@ -56,6 +53,13 @@ bool minecraft::is_store_managed() {
     // most likely not installed
     spdlog::warn("Call to is_store_managed failed; the game is probably not installed");
     return false;
+}
+
+bool minecraft::is_gdk() {
+    minecraft_version version = this->version();
+    if (version.empty()) return { };
+    
+    return version[0] == '1';
 }
 
 std::optional<AppInfo> minecraft::get_app_info() {
