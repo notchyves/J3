@@ -10,7 +10,7 @@ struct backup {
     };
     
     std::string name;
-    std::filesystem::path path;
+    std::string path;
     minecraft_version from_version;
     std::chrono::system_clock::time_point timestamp;
     contents contents;
