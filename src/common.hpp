@@ -33,6 +33,7 @@
 #include <entt/entt.hpp>
 #include <libhat.hpp>
 #include <spdlog/spdlog.h>
+#include <glaze/json.hpp>
 
 // aliases for dxmath because the names are silly
 using vector = DirectX::XMVECTOR;

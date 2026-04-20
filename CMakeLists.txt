@@ -25,6 +25,7 @@ CPMAddPackage("https://gitlab.freedesktop.org/freetype/freetype.git#VER-2-14-3")
 CPMAddPackage("gh:harfbuzz/harfbuzz#13.2.1")
 CPMAddPackage("gh:assimp/assimp@6.0.2")
 CPMAddPackage("gh:BasedInc/libhat@0.9.0")
+CPMAddPackage("gh:stephenberry/glaze@7.2.2")
 
 # define alias for freetype so RmlUi can find it
 add_library(Freetype::Freetype ALIAS freetype)
@@ -134,7 +135,22 @@ target_sources(rmlui_font_engine_harfbuzz INTERFACE ${RMLUI_HARFBUZZ_SOURCES})
 target_include_directories(rmlui_font_engine_harfbuzz INTERFACE ${RmlUi_SOURCE_DIR}/Source/Core)
 include_directories(${RMLUI_HARFBUZZ_PATH})
 
-target_link_libraries(j3 PRIVATE spdlog::spdlog EnTT::EnTT DirectXTK RmlUi::RmlUi rmlui_backend_WIN32_DX11 rmlui_font_engine_harfbuzz harfbuzz assimp libhat d3d11 dxgi d3dcompiler dwmapi)
+target_link_libraries(j3 PRIVATE 
+        spdlog::spdlog
+        EnTT::EnTT
+        DirectXTK
+        RmlUi::RmlUi
+        rmlui_backend_WIN32_DX11
+        rmlui_font_engine_harfbuzz
+        harfbuzz
+        assimp
+        libhat
+        glaze::glaze
+        d3d11
+        dxgi
+        d3dcompiler
+        dwmapi
+)
 
 target_compile_definitions(j3 PRIVATE UNICODE)
 target_compile_definitions(j3 PRIVATE NOMINMAX)
