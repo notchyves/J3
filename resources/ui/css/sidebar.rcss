@@ -111,21 +111,21 @@ h1 {
 }
 
 #sidebar-home {
-    decorator: image("../../textures/home.png" scale-none left center) content-box, text("Home" 64dp);
+    decorator: image("../../textures/home.png" scale-none left center) content-box, text("home.name" 64dp);
 }
 
 #sidebar-mods {
-    decorator: image("../../textures/mod.png" scale-none left center) content-box, text("Mods" 64dp);
+    decorator: image("../../textures/mod.png" scale-none left center) content-box, text("mods.name" 64dp);
 }
 
 #sidebar-backups {
-    decorator: image("../../textures/archive.png" scale-none left center) content-box, text("Backups" 64dp);
+    decorator: image("../../textures/backup.png" scale-none left center) content-box, text("backups.name" 64dp);
 }
 
 #sidebar-versions {
-    decorator: image("../../textures/version.png" scale-none left center) content-box, text("Versions" 64dp);
+    decorator: image("../../textures/version.png" scale-none left center) content-box, text("versions.name" 64dp);
 }
 
 #sidebar-settings {
-    decorator: image("../../textures/settings.png" scale-none left center) content-box, text("Settings" 64dp);
+    decorator: image("../../textures/settings.png" scale-none left center) content-box, text("settings.name" 64dp);
 }

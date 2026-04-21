@@ -7,7 +7,7 @@
 
     <body data-model="sidebar_data">
     <div class="sidebar" data-event-mousemove="bring_to_front();">
-        <h1>J3</h1>
+        <h1>general.app</h1>
     
         <form class="sidebar-main">
             <label class="sidebar-item" data-class-selected="selected_tab == 0">

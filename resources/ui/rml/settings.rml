@@ -4,6 +4,6 @@
         <link type="text/rcss" href="../css/default.rcss"/>
     </head>
     <body>
-        <h1>Settings</h1>
+        <h1>settings.name</h1>
     </body>
 </rml>

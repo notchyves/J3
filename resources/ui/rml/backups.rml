@@ -7,35 +7,35 @@
 </head>
     
 <body data-model="backups_data">
-    <h1>Backups</h1>
+    <h1>backups.name</h1>
 
     <div class="backups-main flex-column">
         <div class="backup flex-row space-between center-items">
             <div class="backup-info">
-                <h2>Current game data <em>from {{current_version}}</em></h2>
-                <i>{{current_w}} worlds - {{current_rp}} resource packs - {{current_bp}} behavior packs</i>
+                <h2>backups.current.name<em>backups.current.version</em></h2>
+                <i>backups.current.contents</i>
             </div>
             
             <div class="backup-buttons flex-row ten-gap inner-no-margins">
-                <button data-event-click="create_backup">New backup</button>
+                <button data-event-click="create_backup">backups.current.new</button>
             </div>
         </div>
         
         <div class="backup flex-row space-between center-items" data-for="backup : collection">
             <div class="backup-info">
-                <h2>{{backup.name}} <em>from {{backup.from_version}}</em></h2>
-                <i>{{backup.contents.worlds}} worlds - {{backup.contents.resource_packs}} resource packs - {{backup.contents.behavior_packs}} behavior packs</i>
+                <h2>backups.backup.name<em>backups.backup.version</em></h2>
+                <i>backups.backup.contents</i>
             </div>
 
             <div class="backup-buttons flex-row ten-gap inner-no-margins">
-                <button class="less">Delete</button>
-                <button>Apply</button>
+                <button class="less">general.delete</button>
+                <button>general.apply</button>
             </div>
         </div>
         
         <div class="flex-column center-items half-gap inner-no-margins" data-if="collection.size == 0">
-            <i>No backups yet!</i>
-            <em>It's a good idea to back up your stuff</em>
+            <i>backups.none1</i>
+            <em>backups.none2</em>
         </div>
     </div>
 </body>

@@ -6,6 +6,7 @@ dxtk_render_interface::dxtk_render_interface(const winrt::com_ptr<ID3D11Device>&
     this->device = device;
     this->Init(this->device.get());
 }
+
 Rml::TextureHandle dxtk_render_interface::LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source) {
     Rml::FileInterface* file_interface = Rml::GetFileInterface();
     Rml::FileHandle file_handle = file_interface->Open(source);

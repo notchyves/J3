@@ -16,7 +16,7 @@ void rml_system::initialize(
     this->render_interface = Rml::MakeUnique<dxtk_render_interface>(device);
     Rml::SetRenderInterface(this->render_interface.get());
 
-    this->system_interface = Rml::MakeUnique<SystemInterface_Win32>();
+    this->system_interface = Rml::MakeUnique<l10n_system_interface>();
     this->system_interface->SetWindow(this->window_handle);
     Rml::SetSystemInterface(this->system_interface.get());
 

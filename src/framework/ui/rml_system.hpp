@@ -3,6 +3,7 @@
 
 #include "framework/resource/resource.hpp"
 #include "interface/render/dxtk_render_interface.hpp"
+#include "interface/system/l10n_system_interface.hpp"
 
 #include <RmlUi/Core/Input.h>
 #include <RmlUi_Platform_Win32.h>
@@ -56,7 +57,7 @@ private:
     winrt::com_ptr<ID3D11RenderTargetView> render_target_view;
 
     Rml::UniquePtr<dxtk_render_interface> render_interface;
-    Rml::UniquePtr<SystemInterface_Win32> system_interface;
+    Rml::UniquePtr<l10n_system_interface> system_interface;
     Rml::UniquePtr<FontEngineInterfaceHarfBuzz> font_engine;
 
     Rml::Context* context = nullptr;
