@@ -15,8 +15,8 @@ public:
     void rename_backup(const std::string& name, const std::string& new_name);
     void remove_backup(const std::string& name);
     
+    struct backup::contents count_backup_contents(const std::filesystem::path& path);
+    
 private:
     backup_collection collection;
-    
-    struct backup::contents count_backup_contents(const std::filesystem::path& path);
 };

@@ -1,0 +1,8 @@
+.backup {
+    width: auto;
+    margin-right: 109dp;
+    background-color: #FFFFFF0C;
+    padding: 10dp;
+    border-radius: 4dp;
+    filter: drop-shadow(#000000FF 0 4dp 2dp);
+}

@@ -78,14 +78,14 @@ void backup_manager::create_backup(const std::string& name, const minecraft_vers
 }
 
 void backup_manager::rename_backup(const std::string& name, const std::string& new_name) {
-    for (int i = 0; i < this->collection.size(); i++) {
-        if (this->collection[i].name != name) continue;
+    for (auto& backup : this->collection) {
+        if (backup.name != name) continue;
         
-        this->collection[i].name = new_name;
+        backup.name = new_name;
         
         std::filesystem::path new_path = this->current_path / new_name;
-        std::filesystem::rename(this->collection[i].path, new_path);
-        this->collection[i].path = new_path.string();
+        std::filesystem::rename(backup.path, new_path);
+        backup.path = new_path.string();
         
         spdlog::info("Renamed {} to {}", name, new_name);
         this->save();

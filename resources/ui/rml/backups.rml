@@ -1,9 +1,25 @@
 <rml>
-    <head>
-        <title>J3 - backups</title>
-        <link type="text/rcss" href="../css/default.rcss"/>
-    </head>
-    <body>
-        <h1>Backups</h1>
-    </body>
+<head>
+    <title>J3 - backups</title>
+    <link type="text/rcss" href="../css/default.rcss"/>
+    <link type="text/rcss" href="../css/common.rcss"/>
+    <link type="text/rcss" href="../css/backup.rcss"/>
+</head>
+    
+<body data-model="backups_data">
+    <h1>Backups</h1>
+
+    <div class="backups-main flex-column">
+        <div class="backup flex-row space-between center-items">
+            <div class="backup-info">
+                <h2>Current game data <em>from {{current_version}}</em></h2>
+                <i>{{current_w}} worlds - {{current_rp}} resource packs - {{current_bp}} behavior packs</i>
+            </div>
+            
+            <div class="backup-buttons">
+                <button>New backup</button>
+            </div>
+        </div>
+    </div>
+</body>
 </rml>
