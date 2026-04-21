@@ -59,7 +59,7 @@ bool minecraft::is_gdk() {
     minecraft_version version = this->version();
     if (version.empty()) return { };
     
-    return version[0] == '1';
+    return version[0] != '1';
 }
 
 std::optional<AppInfo> minecraft::get_app_info() {
