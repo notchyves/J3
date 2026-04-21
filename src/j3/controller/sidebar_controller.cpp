@@ -25,6 +25,7 @@ void sidebar_controller::switch_tab(Rml::DataModelHandle handle, Rml::Event& eve
     int requested_tab = args[0].Get(-1);
     if (requested_tab == -1) return;
     this->model.selected_tab = requested_tab;
+    handle.DirtyVariable("selected_tab");
     
     auto& app = application::get();
     auto& window = app.get_main_window();
@@ -58,6 +59,4 @@ void sidebar_controller::switch_tab(Rml::DataModelHandle handle, Rml::Event& eve
     
     // make sure sidebar is on top after switching tabs
     event.GetTargetElement()->GetOwnerDocument()->PullToFront();
-    
-    handle.DirtyVariable("selected_tab");
 }
