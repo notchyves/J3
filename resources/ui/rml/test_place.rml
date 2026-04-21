@@ -2,7 +2,7 @@
 <head>
     <title>J3 - test place</title>
     <link type="text/rcss" href="../css/default.rcss"/>
-    <link type="text/rcss" href="../css/test_place.rcss"/>
+    <link type="text/rcss" href="../css/common.rcss"/>
 </head>
 
 <body data-model="test_place_data">
