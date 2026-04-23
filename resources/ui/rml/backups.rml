@@ -28,7 +28,7 @@
             </div>
 
             <div class="backup-buttons flex-row ten-gap inner-no-margins">
-                <button class="less">general.delete</button>
+                <button class="less" data-event-click="delete_backup(backup.name)">general.delete</button>
                 <button>general.apply</button>
             </div>
         </div>

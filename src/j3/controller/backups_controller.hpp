@@ -14,4 +14,7 @@ private:
     backup_manager manager{ "./test_backups" };
     
     void create_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);
+    void apply_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);
+    void rename_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);
+    void delete_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);
 };

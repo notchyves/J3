@@ -26,6 +26,9 @@ void backups_controller::bind_data(Rml::DataModelConstructor& dmc) {
     dmc.Bind("collection", &this->model.collection);
     
     dmc.BindEventCallback("create_backup", &backups_controller::create_backup, this);
+    dmc.BindEventCallback("apply_backup", &backups_controller::apply_backup, this);
+    dmc.BindEventCallback("rename_backup", &backups_controller::rename_backup, this);
+    dmc.BindEventCallback("delete_backup", &backups_controller::delete_backup, this);
     
     // init values
     minecraft game;
@@ -42,5 +45,21 @@ void backups_controller::bind_data(Rml::DataModelConstructor& dmc) {
 void backups_controller::create_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
     std::string backup_name = std::format("Backup {}", this->manager.get_backups().size() + 1);
     this->manager.create_backup(backup_name, static_cast<const minecraft_version&>(this->model.current_version));
+    handle.DirtyVariable("collection");
+}
+
+void backups_controller::apply_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
+    
+}
+
+void backups_controller::rename_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
+    
+}
+
+void backups_controller::delete_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
+    if (args.empty()) return;
+    auto backup_name = args[0].Get<Rml::String>();
+    
+    this->manager.remove_backup(backup_name);
     handle.DirtyVariable("collection");
 }
