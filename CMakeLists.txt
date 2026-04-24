@@ -26,6 +26,7 @@ CPMAddPackage("gh:harfbuzz/harfbuzz#13.2.1")
 CPMAddPackage("gh:assimp/assimp@6.0.2")
 CPMAddPackage("gh:BasedInc/libhat@0.9.0")
 CPMAddPackage("gh:stephenberry/glaze@7.2.2")
+CPMAddPackage("gh:cameron314/concurrentqueue@1.0.5")
 
 # define alias for freetype so RmlUi can find it
 add_library(Freetype::Freetype ALIAS freetype)
@@ -146,6 +147,7 @@ target_link_libraries(j3 PRIVATE
         assimp
         libhat
         glaze::glaze
+        concurrentqueue
         d3d11
         dxgi
         d3dcompiler
