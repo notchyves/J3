@@ -42,39 +42,52 @@ backup_collection& backup_manager::get_backups() {
     return this->collection;
 }
 
-void backup_manager::create_backup(const std::string& name, const minecraft_version& for_version) {
-    spdlog::info("Creating {} for version {}", name, for_version);
+task backup_manager::create_backup(const std::string& name, const minecraft_version& for_version) {
+    return { "Creating backup...", [=](task& t) {
+        spdlog::info("Creating {} for version {}", name, for_version);
     
-    minecraft game;
-    std::filesystem::path game_data = game.data_path();
+        minecraft game;
+        std::filesystem::path game_data = game.data_path();
 
-    std::filesystem::path real_game_data;
-    if (!game.is_gdk()) {
-        // easy for UWP
-        real_game_data = game_data / "LocalState";
-        spdlog::debug("Got UWP game platform, game data is at {}", real_game_data.string());
-    } else {
-        // there is a folder for each Xbox user signed in for GDK and this is very strange
-        // so we're backing up the whole Users folder to match UWP behavior
-        real_game_data = game_data / "Users";
-        spdlog::debug("Got GDK game platform, game data is at {}", real_game_data.string());
-    }
+        std::filesystem::path real_game_data;
+        if (!game.is_gdk()) {
+            // easy for UWP
+            real_game_data = game_data / "LocalState";
+            spdlog::debug("Got UWP game platform, game data is at {}", real_game_data.string());
+        } else {
+            // there is a folder for each Xbox user signed in for GDK and this is very strange
+            // so we're backing up the whole Users folder to match UWP behavior
+            real_game_data = game_data / "Users";
+            spdlog::debug("Got GDK game platform, game data is at {}", real_game_data.string());
+        }
+        
+        t.progress = 0.1f;
     
-    std::filesystem::path final_backup_path = this->current_path / name;
-    std::filesystem::copy(real_game_data, final_backup_path, std::filesystem::copy_options::recursive);
-    spdlog::debug("Copied game data to {}", final_backup_path.string());
+        std::filesystem::path final_backup_path = this->current_path / name;
+        std::filesystem::copy(real_game_data, final_backup_path, std::filesystem::copy_options::recursive);
+        spdlog::debug("Copied game data to {}", final_backup_path.string());
+        
+        t.progress = 0.9f;
     
-    // new backup
-    this->collection.push_back({
-        name,
-        final_backup_path.string(),
-        for_version,
-        std::chrono::system_clock::now().time_since_epoch().count(),
-        this->count_backup_contents(final_backup_path)
-    });
+        // new backup
+        this->collection.push_back({
+            name,
+            final_backup_path.string(),
+            for_version,
+            std::chrono::system_clock::now().time_since_epoch().count(),
+            this->count_backup_contents(final_backup_path)
+        });
     
-    spdlog::info("Created {} in {}", name, final_backup_path.string());
-    this->save();
+        spdlog::info("Created {} in {}", name, final_backup_path.string());
+        this->save();
+        
+        t.progress = 1;
+    }};
+}
+
+void backup_manager::apply_backup(const std::string& name) {
+    // not sure how i'm supposed to apply backups across platforms
+    spdlog::warn("Not implemented");
 }
 
 void backup_manager::rename_backup(const std::string& name, const std::string& new_name) {

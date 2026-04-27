@@ -1,5 +1,6 @@
 #include "backups_controller.hpp"
 
+#include "framework/core/application.hpp"
 #include "j3/game/minecraft.hpp"
 
 void backups_controller::bind_data(Rml::DataModelConstructor& dmc) {
@@ -43,13 +44,23 @@ void backups_controller::bind_data(Rml::DataModelConstructor& dmc) {
 }
 
 void backups_controller::create_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
-    std::string backup_name = std::format("Backup {}", this->manager.get_backups().size() + 1);
-    this->manager.create_backup(backup_name, static_cast<const minecraft_version&>(this->model.current_version));
+    task t = this->manager.create_backup(
+        std::format("Backup {}", this->manager.get_backups().size() + 1),
+        static_cast<const minecraft_version&>(this->model.current_version)
+    );
+    
+    auto& app = application::get();
+    app.workers.add_task(t);
+    
     handle.DirtyVariable("collection");
 }
 
 void backups_controller::apply_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
+    if (args.empty()) return;
+    auto backup_name = args[0].Get<Rml::String>();
     
+    this->manager.apply_backup(backup_name);
+    handle.DirtyVariable("collection");
 }
 
 void backups_controller::rename_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {

@@ -1,6 +1,8 @@
 #pragma once
 #include "common.hpp"
+
 #include "backup.hpp"
+#include "framework/worker/task.hpp"
 
 class backup_manager {
 public:
@@ -11,7 +13,8 @@ public:
     void save();
     
     backup_collection& get_backups();
-    void create_backup(const std::string& name, const minecraft_version& for_version);
+    task create_backup(const std::string& name, const minecraft_version& for_version);
+    void apply_backup(const std::string& name);
     void rename_backup(const std::string& name, const std::string& new_name);
     void remove_backup(const std::string& name);
     

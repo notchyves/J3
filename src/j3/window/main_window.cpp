@@ -8,7 +8,7 @@
 #include "j3/view/test_place.hpp"
 #include "j3/view/versions.hpp"
 
-main_window::main_window(HINSTANCE instance, const std::wstring& title, vector2 size, bool main_window)
+main_window::main_window(HINSTANCE instance, const std::wstring& title, const vector2 size, const bool main_window)
     : window(instance, title, size, main_window) {
     this->set_background_color({ 0.058f, 0.058f, 0.058f, 1 });
 
