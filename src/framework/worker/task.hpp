@@ -3,7 +3,7 @@
 
 class task {
 public:
-    std::string name{ "Unknown" };
     std::function<void(task&)> work{ nullptr };
+    std::string name{ "Starting background task..." };
     volatile float progress{ 0 };
 };
