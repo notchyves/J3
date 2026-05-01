@@ -32,6 +32,7 @@ struct mesh {
 
     // load verts and indices from file or resource
     static std::vector<mesh> load(const std::string& path) {
+        // TODO: assimp is buttcheek bro
         Assimp::Importer importer;
 
         const aiScene* scene = importer.ReadFile(

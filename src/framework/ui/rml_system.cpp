@@ -2,8 +2,6 @@
 
 #include <RmlUi/Debugger/Debugger.h>
 
-#include "framework/resource/resource.hpp"
-
 void rml_system::initialize(
     HWND handle, vector2 size, const winrt::com_ptr<ID3D11Device>& device,
     const winrt::com_ptr<ID3D11RenderTargetView>& rtv
@@ -40,7 +38,7 @@ void rml_system::initialize(
     Rml::LoadFontFace("resources/fonts/MontserratItalic.ttf");
 }
 
-void rml_system::update() {
+void rml_system::update() const {
     this->context->Update();
     this->render_interface->SetViewport(this->window_size.x, this->window_size.y);
     this->render_interface->BeginFrame(this->render_target_view.get());
@@ -48,7 +46,7 @@ void rml_system::update() {
     this->render_interface->EndFrame();
 }
 
-void rml_system::request_update(const double timeout) { this->context->RequestNextUpdate(timeout); }
+void rml_system::request_update(const double timeout) const { this->context->RequestNextUpdate(timeout); }
 
 void rml_system::destroy() {
     Rml::Shutdown();
@@ -61,11 +59,11 @@ void rml_system::resize(const vector2 new_size, const winrt::com_ptr<ID3D11Rende
     this->render_target_view = rtv;
 }
 
-void rml_system::set_dip_ratio(const float ratio) {
+void rml_system::set_dip_ratio(const float ratio) const {
     this->context->SetDensityIndependentPixelRatio(ratio);
 }
 
-bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) {
+bool rml_system::window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) const {
     if (this->ime == nullptr) return false; // prevent access of null pointer after destruction
 
 #ifndef NDEBUG // debug

@@ -12,11 +12,11 @@ winrt::com_ptr<ID3D11VertexShader>& vertex_shader::get() {
     return this->shader;
 }
 
-const char* vertex_shader::data() {
+const char* vertex_shader::data() const {
     return this->shader_data;
 }
 
-size_t vertex_shader::size() {
+size_t vertex_shader::size() const {
     return this->shader_size;
 }
 
@@ -36,11 +36,11 @@ winrt::com_ptr<ID3D11PixelShader>& pixel_shader::get() {
     return this->shader;
 }
 
-const char* pixel_shader::data() {
+const char* pixel_shader::data() const {
     return this->shader_data;
 }
 
-size_t pixel_shader::size() {
+size_t pixel_shader::size() const {
     return this->shader_size;
 }
 

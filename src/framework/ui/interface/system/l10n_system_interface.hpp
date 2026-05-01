@@ -10,6 +10,6 @@ public:
     int TranslateString(Rml::String& translated, const Rml::String& input) override;
     
 private:
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> locales_to_strings;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> locales_to_strings{ };
     std::string current_locale{ "en_US" };
 };

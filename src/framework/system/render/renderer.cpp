@@ -194,7 +194,7 @@ void renderer::create_device_and_swap_chain() {
     swap_chain_desc.BufferDesc.Width = static_cast<UINT>(this->window_size.x);
     swap_chain_desc.BufferDesc.Height = static_cast<UINT>(this->window_size.y);
     
-    // probably get the refresh rate from the monitor
+    // TODO: IDXGIAdapter::EnumOutputs -> IDXGIOutput1::GetDisplayModeList1 to get refresh rate
     swap_chain_desc.BufferDesc.RefreshRate.Numerator = 60;
     swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
     
@@ -279,7 +279,7 @@ void renderer::create_render_targets() {
     LOG_HRESULT(error, "Multisampled depth stencil view creation failed", hr);
 }
 
-void renderer::set_viewport() {
+void renderer::set_viewport() const {
     CD3D11_VIEWPORT viewport(0.0f, 0.0f, this->window_size.x, this->window_size.y);
     this->device_context->RSSetViewports(1, &viewport);
 }
@@ -315,7 +315,7 @@ void renderer::create_blend_state() {
     blend_desc.RenderTarget[0] = rt_blend_desc;
 
     HRESULT hr = this->device->CreateBlendState(&blend_desc, this->blend_state.put());
-    LOG_HRESULT(error, "Blend state creation failed failed", hr);
+    LOG_HRESULT(error, "Blend state creation failed", hr);
 }
 
 void renderer::create_default_resources() {
@@ -344,7 +344,7 @@ void renderer::create_default_resources() {
     LOG_HRESULT(error, "Input layout creation failed", hr);
 }
 
-void renderer::ensure_texture_loaded(const std::shared_ptr<texture>& tex) {
+void renderer::ensure_texture_loaded(const std::shared_ptr<texture>& tex) const {
     if (tex == nullptr || tex->texture_view != nullptr) {
         return;
     }
@@ -352,7 +352,12 @@ void renderer::ensure_texture_loaded(const std::shared_ptr<texture>& tex) {
     HRESULT hr;
     winrt::com_ptr<ID3D11Resource> texture_resource;
     
-    if (tex->path != L"") {
+    if (!tex->path.empty()) {
+        if (!std::filesystem::exists(tex->path)) {
+            spdlog::error("Provided texture path does not exist, not loading: {}", tex->path.string());
+            return;
+        }
+        
         // load texture from file
         hr = DirectX::CreateWICTextureFromFile(
             this->device.get(),
@@ -378,7 +383,7 @@ void renderer::ensure_texture_loaded(const std::shared_ptr<texture>& tex) {
     LOG_HRESULT(error, "Texture creation failed", hr);
 }
 
-void renderer::ensure_mesh_buffers_created(const std::shared_ptr<mesh>& m) {
+void renderer::ensure_mesh_buffers_created(const std::shared_ptr<mesh>& m) const {
     if (m->vertex_buffer->size() != 0 && m->index_buffer->size() != 0) {
         return;
     }

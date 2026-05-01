@@ -4,23 +4,23 @@
 struct camera {
 private:
     // vars for view matrix
-    vector3 position = { 0, 0, -2 };
-    vector pos_vec;
-    vector3 rotation = { 0, 0, 0 };
+    vector3 position{ 0, 0, -2 };
+    vector pos_vec{ };
+    vector3 rotation{ 0, 0, 0 };
 
     // vars for projection matrix
-    float fov = 90.0f;
-    float aspect_ratio = 1.0f;
-    float near_z = 0.1f;
-    float far_z = 3000.0f;
+    float fov{ 90.f };
+    float aspect_ratio{ 1.f };
+    float near_z{ 0.1f };
+    float far_z{ 3000.f };
     
-    matrix view_mat = DirectX::XMMatrixIdentity();
-    matrix proj_mat = DirectX::XMMatrixIdentity();
-    bool view_dirty = true;
-    bool proj_dirty = true;
+    matrix view_mat{ DirectX::XMMatrixIdentity() };
+    matrix proj_mat{ DirectX::XMMatrixIdentity() };
+    bool view_dirty{ true };
+    bool proj_dirty{ true };
 
-    const vector VECTOR_FORWARD = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-    const vector VECTOR_UP = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    const vector VECTOR_FORWARD{ DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f) };
+    const vector VECTOR_UP{ DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
     
 public:
     camera() { this->pos_vec = DirectX::XMLoadFloat3(&this->position); }
@@ -54,7 +54,7 @@ public:
         this->view_dirty = true;
     }
     
-    void set_rotation(const vector3 rotation) {
+    void set_rotation(const vector3& rotation) {
         this->rotation = rotation;
         this->view_dirty = true;
     }

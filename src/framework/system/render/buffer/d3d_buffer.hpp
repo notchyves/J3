@@ -9,9 +9,9 @@ public:
     void initialize(const winrt::com_ptr<ID3D11Device>& device, const T* data, const size_t num_elements, const D3D11_BIND_FLAG bind_flag) {
         this->buffer_elements = num_elements;
         this->buffer_stride = std::make_unique<UINT>(sizeof(T));
-        
-        CD3D11_BUFFER_DESC desc(sizeof(T) * num_elements, bind_flag);
-        D3D11_SUBRESOURCE_DATA buffer_data = { };
+
+        const CD3D11_BUFFER_DESC desc(sizeof(T) * num_elements, bind_flag);
+        D3D11_SUBRESOURCE_DATA buffer_data{ };
         buffer_data.pSysMem = data;
 
         HRESULT hr = device->CreateBuffer(&desc, &buffer_data, this->buffer.put());
@@ -21,8 +21,8 @@ public:
     // specialized function for constant buffers
     template <std::derived_from<cbuffer> T>
     void initialize(const winrt::com_ptr<ID3D11Device>& device) {
-        CD3D11_BUFFER_DESC desc(static_cast<UINT>(sizeof(T) + (16 - sizeof(T) % 16)),
-            D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+        const CD3D11_BUFFER_DESC desc{ static_cast<UINT>(sizeof(T) + (16 - sizeof(T) % 16)),
+            D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE };
 
         HRESULT hr = device->CreateBuffer(&desc, nullptr, this->buffer.put());
         LOG_HRESULT(error, "DirectX constant buffer initialization failed", hr);
@@ -33,10 +33,20 @@ public:
     }
 
     void edit(const winrt::com_ptr<ID3D11DeviceContext>& context, const void* data, const size_t size) const {
-        // calling this function when CPU access is not D3D11_CPU_ACCESS_WRITE is undefined behavior i think
+        D3D11_BUFFER_DESC buffer_desc{ };
+        this->buffer->GetDesc(&buffer_desc);
+        if (buffer_desc.CPUAccessFlags != D3D11_CPU_ACCESS_WRITE) {
+            spdlog::error("Cannot edit a read-only Direct3D buffer");
+            return;
+        }
         
         D3D11_MAPPED_SUBRESOURCE mapped_resource = { };
-        context->Map(this->buffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+        HRESULT hr = context->Map(this->buffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+        if (FAILED(hr)) {
+            spdlog::error("Failed to map Direct3D buffer to the CPU, no edits made");
+            return;
+        }
+        
         memcpy(mapped_resource.pData, data, size);
         context->Unmap(this->buffer.get(), 0);
     }
@@ -54,7 +64,7 @@ public:
     }
 
 private:
-    winrt::com_ptr<ID3D11Buffer> buffer;
-    size_t buffer_elements = 0;
-    std::unique_ptr<UINT> buffer_stride;
+    winrt::com_ptr<ID3D11Buffer> buffer{ nullptr };
+    size_t buffer_elements{ 0 };
+    std::unique_ptr<UINT> buffer_stride{ nullptr };
 };

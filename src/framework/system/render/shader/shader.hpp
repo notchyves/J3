@@ -9,8 +9,8 @@ public:
     void initialize(const winrt::com_ptr<ID3D11Device>& device, const resource& data);
     
     winrt::com_ptr<ID3D11VertexShader>& get();
-    const char* data();
-    size_t size();
+    const char* data() const;
+    size_t size() const;
     d3d_buffer& get_constant_buffer();
 
     template<std::derived_from<cbuffer> T>
@@ -30,8 +30,8 @@ public:
     void initialize(const winrt::com_ptr<ID3D11Device>& device, const resource& data);
     
     winrt::com_ptr<ID3D11PixelShader>& get();
-    const char* data();
-    size_t size();
+    const char* data() const;
+    size_t size() const;
     d3d_buffer& get_constant_buffer();
 
     template<std::derived_from<cbuffer> T>

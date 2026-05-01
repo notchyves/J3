@@ -3,12 +3,12 @@
 
 struct transform {
 private:
-    vector3 position = { 0, 0, 0 };
-    vector3 scale = { 1, 1, 1 };
-    vector3 rotation = { 0, 0, 0 };
+    vector3 position{ 0, 0, 0 };
+    vector3 scale{ 1, 1, 1 };
+    vector3 rotation{ 0, 0, 0 };
     
-    bool dirty_matrix = true;
-    matrix mat = DirectX::XMMatrixIdentity();
+    bool dirty_matrix{ true };
+    matrix mat{ DirectX::XMMatrixIdentity() };
 
 public:
     [[nodiscard]] vector3 get_position() const {

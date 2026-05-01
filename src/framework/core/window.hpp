@@ -6,10 +6,10 @@
 
 class window {
 public:
-    HWND handle;
+    HWND handle{ };
     bool main_window;
-    ecs_manager ecs;
-    rml_system rml;
+    ecs_manager ecs{ };
+    rml_system rml{ };
 
     window(HINSTANCE instance, const std::wstring& title, vector2 size, bool main_window);
     window(HINSTANCE instance, const std::wstring& title, vector2 position, vector2 size, bool main_window);
@@ -23,7 +23,7 @@ public:
 
     bool get_focused() const;
     
-    float get_dip_ratio();
+    float get_dip_ratio() const;
 
     void set_background_color(const vector4& color) const;
     
@@ -32,5 +32,5 @@ public:
     virtual ~window();
 
 private:
-    bool closing;
+    bool closing{ false };
 };

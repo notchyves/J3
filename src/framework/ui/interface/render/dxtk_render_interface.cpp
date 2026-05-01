@@ -32,8 +32,8 @@ Rml::TextureHandle dxtk_render_interface::LoadTexture(Rml::Vector2i& texture_dim
 
     D3D11_TEXTURE2D_DESC desc = {};
     texture.as<ID3D11Texture2D>()->GetDesc(&desc);
-    texture_dimensions.x = desc.Width;
-    texture_dimensions.y = desc.Height;
+    texture_dimensions.x = static_cast<float>(desc.Width);
+    texture_dimensions.y = static_cast<float>(desc.Height);
 
     return std::bit_cast<Rml::TextureHandle>(texture_srv);
 }

@@ -1,8 +1,6 @@
 #include "worker.hpp"
 
-worker::worker(moodycamel::BlockingConcurrentQueue<task>& task_queue) : task_queue(task_queue) {
-    
-}
+worker::worker(moodycamel::BlockingConcurrentQueue<task>& task_queue) : task_queue(task_queue) { }
 
 void worker::run() {
     this->running = true;

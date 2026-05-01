@@ -21,15 +21,10 @@ window::window(
 void window::finish_create(
     const HINSTANCE instance, const std::wstring& title, const vector2 position, const vector2 size
 ) {
-    RECT rect;
-    rect.left = 0;
-    rect.top = 0;
-    rect.right = size.x;
-    rect.bottom = size.y;
-
+    RECT rect{ 0, 0, static_cast<LONG>(size.x), static_cast<LONG>(size.y) };
     AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_APPWINDOW);
 
-    vector2 real_size = { static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top) };
+    const vector2 real_size{ static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top) };
 
     this->handle = CreateWindowEx(
         WS_EX_APPWINDOW,
@@ -62,15 +57,11 @@ void window::finish_create(
     auto& r = this->ecs.add_system<renderer>(handle, size); // hardware accelerated by default
 
     // add camera
-    auto camera_entity = this->ecs.create_entity();
-    this->ecs.add_component<camera>(camera_entity);
-
-    // initialize services
+    this->ecs.add_component<camera>(this->ecs.create_entity());
+    
+    // init and hand rml over to ecs so the renderer can access it
     this->rml.initialize(this->handle, size, r.get_device(), r.get_rtv());
-
-    // hand rml over to ecs so the renderer can access it
-    auto rml_entity = this->ecs.create_entity();
-    ecs.add_component<rml_container>(rml_entity, this->rml);
+    ecs.add_component<rml_container>(this->ecs.create_entity(), this->rml);
 
     spdlog::debug("Window systems initialized");
 }
@@ -110,7 +101,7 @@ void window::close() {
 
 bool window::get_focused() const { return GetFocus() == this->handle; }
 
-float window::get_dip_ratio() {
+float window::get_dip_ratio() const {
     UINT dpi = GetDpiForWindow(this->handle);
     if (dpi == 0) dpi = USER_DEFAULT_SCREEN_DPI;
     
@@ -122,7 +113,7 @@ void window::set_background_color(const vector4& color) const {
     rend.set_background_color(color);
 }
 
-bool window::window_proc(UINT message, WPARAM w_param, LPARAM l_param) {
+bool window::window_proc(const UINT message, const WPARAM w_param, const LPARAM l_param) {
     if (message == WM_CLOSE) {
         close();
         return true;

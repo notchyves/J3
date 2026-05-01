@@ -7,8 +7,8 @@
 
 class worker_pool {
 public:
-    moodycamel::BlockingConcurrentQueue<task> task_queue;
-    std::vector<std::unique_ptr<worker>> workers;
+    moodycamel::BlockingConcurrentQueue<task> task_queue{ };
+    std::vector<std::unique_ptr<worker>> workers{ };
     
     void add_task(const task& t);
     void allocate(int num_workers);

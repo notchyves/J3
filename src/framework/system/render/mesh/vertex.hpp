@@ -2,9 +2,9 @@
 #include "common.hpp"
 
 struct vertex {
-    vector3 position;
-    vector4 color;
-    vector2 uv;
+    vector3 position{ };
+    vector4 color{ };
+    vector2 uv{ };
 
     static D3D11_INPUT_ELEMENT_DESC* get_input_layout() {
         static D3D11_INPUT_ELEMENT_DESC layout[] = {

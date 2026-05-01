@@ -1,7 +1,6 @@
 #pragma once
 #include "common.hpp"
 
-#include "framework/resource/resource.hpp"
 #include "interface/render/dxtk_render_interface.hpp"
 #include "interface/system/l10n_system_interface.hpp"
 
@@ -15,13 +14,13 @@ struct rml_system {
         const winrt::com_ptr<ID3D11RenderTargetView>& rtv
     );
 
-    void update();
-    void request_update(double timeout = 0.0);
+    void update() const;
+    void request_update(double timeout = 0.0) const;
     void destroy();
 
     void resize(vector2 new_size, const winrt::com_ptr<ID3D11RenderTargetView>& rtv);
-    void set_dip_ratio(float ratio);
-    bool window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
+    void set_dip_ratio(float ratio) const;
+    bool window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) const;
 
     template <typename view_t>
     void register_view();
@@ -33,6 +32,7 @@ struct rml_system {
     void hide_view();
 
 private:
+    // TODO: reload entire page on F5 instead (or even add hot reloading)
     class refresh_listener : public Rml::EventListener {
     public:
         void ProcessEvent(Rml::Event& event) override {
@@ -50,18 +50,18 @@ private:
         static inline refresh_listener refresh_listener;
     };
 
-    HWND window_handle = nullptr;
-    Rml::Vector2i window_size = Rml::Vector2i();
+    HWND window_handle{ nullptr };
+    Rml::Vector2i window_size{ };
 
-    winrt::com_ptr<ID3D11Device> device;
-    winrt::com_ptr<ID3D11RenderTargetView> render_target_view;
+    winrt::com_ptr<ID3D11Device> device{ nullptr };
+    winrt::com_ptr<ID3D11RenderTargetView> render_target_view{ nullptr };
 
-    Rml::UniquePtr<dxtk_render_interface> render_interface;
-    Rml::UniquePtr<l10n_system_interface> system_interface;
-    Rml::UniquePtr<FontEngineInterfaceHarfBuzz> font_engine;
+    Rml::UniquePtr<dxtk_render_interface> render_interface{ nullptr };
+    Rml::UniquePtr<l10n_system_interface> system_interface{ nullptr };
+    Rml::UniquePtr<FontEngineInterfaceHarfBuzz> font_engine{ nullptr };
 
-    Rml::Context* context = nullptr;
-    Rml::UniquePtr<TextInputMethodEditor_Win32> ime;
+    Rml::Context* context{ nullptr };
+    Rml::UniquePtr<TextInputMethodEditor_Win32> ime{ nullptr };
 };
 
 template <typename view_t>

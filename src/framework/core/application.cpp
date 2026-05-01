@@ -27,16 +27,21 @@ application::application(const HINSTANCE instance) {
     if (std::filesystem::exists(log_file)) {
         const auto creation_time = std::filesystem::last_write_time(log_file).time_since_epoch();
         const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(creation_time);
-        std::string time_str = std::to_string(seconds.count());
+        const std::string time_str = std::to_string(seconds.count());
 
-        std::filesystem::path previous_log_file = previous_logs_folder / (time_str + ".log");
+        const std::filesystem::path previous_log_file = previous_logs_folder / (time_str + ".log");
         MoveFile(log_file.c_str(), previous_log_file.c_str());
     }
     
     const auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file.string());
 
-    dup_filter->add_sink(msvc_sink);
+    // no duplicate logs in debug mode
+#ifdef NDEBUG
     dup_filter->add_sink(stdout_sink);
+#else // debug
+    dup_filter->add_sink(msvc_sink);
+#endif
+    
     dup_filter->add_sink(file_sink);
 
     spdlog::default_logger()->sinks().emplace_back(dup_filter);
@@ -57,7 +62,7 @@ application::application(const HINSTANCE instance) {
     // get icon because i don't want to load one from a file
     std::array<wchar_t, MAX_PATH> module_path = {};
     GetModuleFileName(this->instance, module_path.data(), MAX_PATH);
-    HICON icon = ExtractIcon(this->instance, module_path.data(), 0);
+    const HICON icon = ExtractIcon(this->instance, module_path.data(), 0);
 
     // application owns the window class
     WNDCLASSEXW window_class = {};
@@ -70,8 +75,7 @@ application::application(const HINSTANCE instance) {
     window_class.hIcon = icon;
     window_class.lpszClassName = WINDOW_CLASS_NAME;
 
-    ATOM atom = RegisterClassEx(&window_class);
-    if (atom == 0) {
+    if (const ATOM atom = RegisterClassEx(&window_class); atom == 0) {
         spdlog::critical("Registering window class failed with result 0x{:08X}, exiting", GetLastError());
         this->quit(-1);
         return;
@@ -79,8 +83,7 @@ application::application(const HINSTANCE instance) {
 
     spdlog::debug("Window class registered for application");
     
-    // allocate some workers
-    this->workers.allocate(5);
+    this->workers.allocate(std::max(1, static_cast<int>(std::thread::hardware_concurrency())));
     
     spdlog::debug("Application singleton initialized");
 }
@@ -134,7 +137,7 @@ void application::run() {
     spdlog::info("Application end");
 }
 
-void application::quit(const int exit_code) {
+void application::quit(const int exit_code) const {
     if (!this->running) {
         spdlog::warn("Exiting immediately");
         exit(exit_code);
@@ -163,7 +166,7 @@ LRESULT application::window_proc(HWND handle, UINT message, WPARAM w_param, LPAR
     return (*window_it)->window_proc(message, w_param, l_param) ? 0 : DefWindowProc(handle, message, w_param, l_param);
 }
 
-bool application::get_message(MSG& message, UINT timeout) {
+bool application::get_message(MSG& message, const UINT timeout) {
     if (timeout != 0) {
         UINT_PTR timer_id = SetTimer(nullptr, 0, timeout, nullptr);
         BOOL result = GetMessage(&message, nullptr, 0, 0);

@@ -8,7 +8,7 @@
 class worker {
 public:
     std::atomic<bool> running{ false };
-    task current_task;
+    task current_task{ };
     
     worker(moodycamel::BlockingConcurrentQueue<task>& task_queue);
     ~worker(); // My only purpose is to work. If I am not working, I am as good as dead.

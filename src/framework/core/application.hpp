@@ -8,17 +8,17 @@
 
 class application {
 public:
-    timer time;
-    std::vector<std::unique_ptr<window>> windows;
-    resource_manager resources;
-    worker_pool workers;
+    timer time{ };
+    std::vector<std::unique_ptr<window>> windows{ };
+    resource_manager resources{ };
+    worker_pool workers{ };
     
     explicit application(HINSTANCE instance);
 
     static application& get();
 
     void run();
-    void quit(int exit_code = 0);
+    void quit(int exit_code = 0) const;
 
     template <std::derived_from<window> T>
     std::unique_ptr<window>& create_window(const std::wstring& title, vector2 size);

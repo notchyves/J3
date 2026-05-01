@@ -11,5 +11,5 @@ public:
     Rml::TextureHandle LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source) override;
 
 private:
-    winrt::com_ptr<ID3D11Device> device;
+    winrt::com_ptr<ID3D11Device> device{ nullptr };
 };

@@ -18,8 +18,8 @@ public:
     system_t& add_system(args&&... a);
 
 private:
-    std::vector<entity_system> systems;
-    entt::registry registry;
+    std::vector<entity_system> systems{ };
+    entt::registry registry{ };
 };
 
 template <typename component_t, typename ... args>
