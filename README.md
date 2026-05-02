@@ -41,7 +41,7 @@ If you'd like to, you can clone this repository and build J3 yourself with the i
 ## Contributing
 If you want to contribute to J3, you can fork the repository and submit a pull request. Please join our Discord server above for a guide of our custom app framework.
 
-The code is admittedly a mess, hence why there is no code style to adhere to. However, please try to keep the code clean and readable.
+The code is relatively cleaner than the legacy Jiayi Launcher's codebase, but there is still no code style to adhere to. Please try to keep the code clean and readable; I'll try to as well 😅 - phase
 
 ## License
 J3 is released under the GNU General Public License, version 3.0. You can read the license [here](https://github.com/JiayiSoftware/J3/blob/master/LICENSE).
