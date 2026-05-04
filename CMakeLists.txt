@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 project(j3)
 
 set(CPM_SOURCE_CACHE ${PROJECT_SOURCE_DIR}/cpm-cache)
-include(cmake/CPM.cmake)
+include(cmake/get_cpm.cmake)
 
 set(CMAKE_CXX_STANDARD 23)
 
