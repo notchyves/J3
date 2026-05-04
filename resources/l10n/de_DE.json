@@ -1,0 +1,25 @@
+{
+  "general.app": "J3",
+  
+  "general.apply": "Auswählen",
+  "general.delete": "Löschen",
+  
+  "home.name": "Home",
+  
+  "mods.name": "Mods",
+  
+  "backups.name": "Backups",
+  "backups.current.name":  "Aktuelles Backup",
+  "backups.current.version": "Von {{current_version}}",
+  "backups.current.contents": "{{current_w}} Welten - {{current_rp}} Resource packs - {{current_bp}} Behavior packs",
+  "backups.current.new": "Neuen backup erstellen",
+  "backups.backup.name": "{{backup.name}} ",
+  "backups.backup.version": "Von {{backup.from_version}}",
+  "backups.backup.contents": "{{backup.contents.worlds}} Welten - {{backup.contents.resource_packs}} Resource packs - {{backup.contents.behavior_packs}} Behavior packs",
+  "backups.none1": "Derzeit kein Backup!",
+  "backups.none2": "Es wäre eine gute Idee, eines zu erstellen, bevor du Mods installierst oder Updates durchführst.",
+  
+  "versions.name": "Versionen",
+  
+  "settings.name": "Einstellungen"
+}
