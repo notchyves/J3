@@ -12,6 +12,9 @@ void worker::run() {
             spdlog::debug("Task assigned: {}", this->current_task.name);
             this->current_task.work(this->current_task);
             spdlog::debug("Task completed: {}", this->current_task.name);
+            
+            if (this->current_task.on_finished)
+                this->current_task.on_finished();
         }
     });
 }

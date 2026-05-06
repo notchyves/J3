@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <div class="backup flex-row space-between center-items" data-for="backup : collection">
+    <div class="backup flex-row space-between center-items" data-for="backup : manager.collection">
         <div class="backup-info">
             <h2>backups.backup.name<em>backups.backup.version</em></h2>
             <i>backups.backup.contents</i>
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="flex-column center-items half-gap inner-no-margins" data-if="collection.size == 0">
+    <div class="flex-column center-items half-gap inner-no-margins" data-if="manager.collection.size == 0">
         <i>backups.none1</i>
         <em>backups.none2</em>
     </div>

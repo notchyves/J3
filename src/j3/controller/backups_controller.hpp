@@ -16,6 +16,10 @@ private:
     backups_model model;
     backup_manager manager{ special_folder::get(FOLDERID_LocalAppData) / "J3" / "Backups" };
     
+    bool needs_update{ false };
+    Rml::DataModelHandle handle;
+    Rml::Element* create_button{ nullptr };
+    
     void create_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);
     void apply_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);
     void rename_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args);

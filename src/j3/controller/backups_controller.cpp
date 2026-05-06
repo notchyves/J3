@@ -24,12 +24,19 @@ void backups_controller::bind_data(Rml::DataModelConstructor& dmc) {
     }
     
     dmc.RegisterArray<backup_collection>();
-    dmc.Bind("collection", &this->model.collection);
+    
+    if (auto backup_manager_handle = dmc.RegisterStruct<backup_manager>()) {
+        backup_manager_handle.RegisterMember("collection", &backup_manager::get_backups);
+    }
+    
+    dmc.Bind("manager", &this->manager);
     
     dmc.BindEventCallback("create_backup", &backups_controller::create_backup, this);
     dmc.BindEventCallback("apply_backup", &backups_controller::apply_backup, this);
     dmc.BindEventCallback("rename_backup", &backups_controller::rename_backup, this);
     dmc.BindEventCallback("delete_backup", &backups_controller::delete_backup, this);
+    
+    this->handle = dmc.GetModelHandle();
     
     // init values
     minecraft game;
@@ -39,24 +46,34 @@ void backups_controller::bind_data(Rml::DataModelConstructor& dmc) {
     this->model.current_w = current_contents.worlds;
     this->model.current_rp = current_contents.resource_packs;
     this->model.current_bp = current_contents.behavior_packs;
-    
-    this->model.collection = this->manager.get_backups();
 }
 
 void backups_controller::update() {
-    
+    if (this->needs_update) {
+        this->needs_update = false;
+        
+        this->handle.DirtyVariable("manager");
+        this->create_button->RemoveAttribute("disabled");
+    }
 }
 
 void backups_controller::create_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
+    this->create_button = e.GetTargetElement();
+    
+    if (this->create_button->HasAttribute("disabled")) return;
+    this->create_button->SetAttribute("disabled", true);
+    
     task t = this->manager.create_backup(
         std::format("Backup {}", this->manager.get_backups().size() + 1),
         this->model.current_version
     );
     
+    t.on_finished = [&] {
+        this->needs_update = true;
+    };
+    
     auto& app = application::get();
     app.workers.add_task(t);
-    
-    handle.DirtyVariable("collection");
 }
 
 void backups_controller::apply_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
@@ -64,7 +81,7 @@ void backups_controller::apply_backup(Rml::DataModelHandle handle, Rml::Event& e
     auto backup_name = args[0].Get<Rml::String>();
     
     this->manager.apply_backup(backup_name);
-    handle.DirtyVariable("collection");
+    handle.DirtyVariable("manager");
 }
 
 void backups_controller::rename_backup(Rml::DataModelHandle handle, Rml::Event& e, const Rml::VariantList& args) {
@@ -76,5 +93,5 @@ void backups_controller::delete_backup(Rml::DataModelHandle handle, Rml::Event& 
     auto backup_name = args[0].Get<Rml::String>();
     
     this->manager.remove_backup(backup_name);
-    handle.DirtyVariable("collection");
+    handle.DirtyVariable("manager");
 }

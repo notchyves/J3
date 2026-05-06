@@ -32,7 +32,7 @@ void backup_manager::save() {
     auto json_path = this->current_path / "backups.json";
     
     if (auto error = glz::write_file_json(this->collection, json_path.string(), std::string{}); !error) {
-        spdlog::info("Created new backup collection");
+        spdlog::info("Saved backup collection");
     } else {
         spdlog::error("Failed to create new backup collection: {}", glz::format_error(error));
     }
@@ -76,7 +76,7 @@ task backup_manager::create_backup(const std::string& name, const minecraft_vers
         this->collection.push_back({
             name,
             final_backup_path.string(),
-            for_version.string(false),
+            for_version.string(),
             std::chrono::system_clock::now().time_since_epoch().count(),
             this->count_backup_contents(final_backup_path)
         });

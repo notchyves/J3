@@ -8,5 +8,4 @@ struct backups_model {
     int current_w{ 0 };
     int current_rp{ 0 };
     int current_bp{ 0 };
-    backup_collection collection;
 };
