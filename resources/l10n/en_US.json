@@ -11,11 +11,11 @@
   "mods.name": "Mods",
   
   "backups.name": "Backups",
-  "backups.current.name": "Current game data ",
+  "backups.current.name": "Current game data",
   "backups.current.version": "from {{current_version}}",
   "backups.current.contents": "{{current_w}} worlds - {{current_rp}} resource packs - {{current_bp}} behavior packs",
   "backups.current.new": "New backup",
-  "backups.backup.name": "{{backup.name}} ",
+  "backups.backup.name": "{{backup.name}}",
   "backups.backup.version": "from {{backup.from_version}}",
   "backups.backup.contents": "{{backup.contents.worlds}} worlds - {{backup.contents.resource_packs}} resource packs - {{backup.contents.behavior_packs}} behavior packs",
   "backups.none1": "No backups yet!",

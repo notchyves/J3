@@ -18,12 +18,20 @@
     gap: 7dp;
 }
 
+.quarter-gap {
+    gap: 4dp;
+}
+
 .space-between {
     justify-content: space-between;
 }
 
 .center-items {
     align-items: center;
+}
+
+.bottom-items {
+    align-items: flex-end;
 }
 
 .third-width {

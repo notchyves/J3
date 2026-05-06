@@ -10,8 +10,12 @@
     <h1>backups.name</h1>
 
     <div class="backup flex-row space-between center-items">
-        <div class="backup-info">
-            <h2>backups.current.name<em>backups.current.version</em></h2>
+        <div class="backup-info current-data">
+            <div class="flex-row half-gap bottom-items">
+                <h2>backups.current.name</h2>
+                <em>backups.current.version</em>
+            </div>
+            
             <i>backups.current.contents</i>
         </div>
 
@@ -22,7 +26,11 @@
 
     <div class="backup flex-row space-between center-items" data-for="backup : manager.collection">
         <div class="backup-info">
-            <h2>backups.backup.name<em>backups.backup.version</em></h2>
+            <div class="flex-row half-gap bottom-items">
+                <h2>backups.backup.name</h2>
+                <em>backups.backup.version</em>
+            </div>
+            
             <i>backups.backup.contents</i>
         </div>
 
