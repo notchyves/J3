@@ -73,7 +73,7 @@ task backup_manager::create_backup(const std::string& name, const minecraft_vers
         t.name = "Saving new backup...";
     
         // new backup
-        this->collection.push_back({
+        this->collection.insert(this->collection.begin(), {
             name,
             final_backup_path.string(),
             for_version.string(),
