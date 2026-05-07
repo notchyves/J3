@@ -13,6 +13,8 @@
   "general.time.weeks_earlier": "{} weeks earlier",
   "general.time.long_time_earlier": "A long, long time ago",
   
+  "general.task.multiple": "Running {} background tasks...",
+  
   "home.name": "Home",
   
   "mods.name": "Mods",
@@ -27,6 +29,9 @@
   "backups.backup.contents": "{{backup.contents.worlds}} worlds - {{backup.contents.resource_packs}} resource packs - {{backup.contents.behavior_packs}} behavior packs",
   "backups.none1": "No backups yet!",
   "backups.none2": "It's a good idea to back up your stuff",
+  "backups.task.creating": "Creating backup...",
+  "backups.task.copying": "Copying game data...",
+  "backups.task.saving": "Saving new backup...",
   
   "versions.name": "Versions",
   
