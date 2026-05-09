@@ -21,7 +21,7 @@ backup_manager::backup_manager(const std::filesystem::path& path) : current_path
     // create new
     spdlog::debug("Backup collection does not exist here, creating");
     std::filesystem::create_directories(this->current_path);
-    if (auto error = glz::write_file_json(this->collection, json_path.string(), std::string{}); !error) {
+    if (auto error = glz::write_file_json<glz::opts{.prettify = true}>(this->collection, json_path.string(), std::string{}); !error) {
         spdlog::info("Created new backup collection");
     } else {
         spdlog::error("Failed to create new backup collection: {}", glz::format_error(error));
@@ -31,7 +31,7 @@ backup_manager::backup_manager(const std::filesystem::path& path) : current_path
 void backup_manager::save() {
     auto json_path = this->current_path / "backups.json";
     
-    if (auto error = glz::write_file_json(this->collection, json_path.string(), std::string{}); !error) {
+    if (auto error = glz::write_file_json<glz::opts{.prettify = true}>(this->collection, json_path.string(), std::string{}); !error) {
         spdlog::info("Saved backup collection");
     } else {
         spdlog::error("Failed to create new backup collection: {}", glz::format_error(error));
@@ -61,13 +61,18 @@ task backup_manager::create_backup(const std::string& name, const minecraft_vers
             real_game_data = game_data / "Users";
             spdlog::debug("Got GDK game platform, game data is at {}", real_game_data.string());
         }
-        
+
         t.progress = 0.2f;
         t.name = "backups.task.copying";
     
         std::filesystem::path final_backup_path = this->current_path / name;
-        std::filesystem::copy(real_game_data, final_backup_path, std::filesystem::copy_options::recursive);
-        spdlog::debug("Copied game data to {}", final_backup_path.string());
+
+        try {
+            std::filesystem::copy(real_game_data, final_backup_path, std::filesystem::copy_options::recursive);
+            spdlog::debug("Copied game data to {}", final_backup_path.string());
+        } catch (const std::filesystem::filesystem_error& e) {
+            spdlog::warn("Copy incomplete, backup may be partial: {}", e.what());
+        }
         
         t.progress = 0.9f;
         t.name = "backups.task.saving";
@@ -128,6 +133,12 @@ void backup_manager::remove_backup(const std::string& name) {
 
 struct backup::contents backup_manager::count_backup_contents(const std::filesystem::path& path) {
     struct backup::contents contents{ };
+
+    if (!std::filesystem::exists(path)) {
+        spdlog::warn("Backup path does not exist, skipping content count");
+        return contents;
+    }
+
     int root_dir_count = 0; // counting com.mojang folders
     
     // lambda for counting top-level folders in a folder

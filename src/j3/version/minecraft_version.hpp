@@ -33,4 +33,6 @@ public:
         
         return this->revision <=> other.revision;
     }
+
+    bool operator==(const minecraft_version& other) const = default;
 };
