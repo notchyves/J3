@@ -1,0 +1,39 @@
+{
+  "language": "Русский (Россия)",
+  
+  "general.app": "J3",
+  
+  "general.apply": "Применить",
+  "general.delete": "Удалить",
+  
+  "general.time.moments_earlier": "Только что",
+  "general.time.minutes_earlier": "{} минут(-у/-ы) назад",
+  "general.time.hours_earlier": "{} час(-а/-ов) назад",
+  "general.time.days_earlier": "{} дней назад",
+  "general.time.weeks_earlier": "{} недель назад",
+  "general.time.long_time_earlier": "Очень давно",
+  
+  "general.task.multiple": "Выполняется {} фоновых задач...",
+  
+  "home.name": "Главная",
+  
+  "mods.name": "Моды",
+  
+  "backups.name": "Резервные копии",
+  "backups.current.name": "Данные этой игры",
+  "backups.current.version": "из {{current_version}}",
+  "backups.current.contents": "{{current_w}} миров - {{current_rp}} пакетов ресурсов - {{current_bp}} пакетов поведения",
+  "backups.current.new": "Создать копию",
+  "backups.backup.name": "{{backup.name}}",
+  "backups.backup.version": "из {{backup.from_version}}",
+  "backups.backup.contents": "{{backup.contents.worlds}} миров - {{backup.contents.resource_packs}} пакетов ресурсов - {{backup.contents.behavior_packs}} пакетов поведения",
+  "backups.none1": "Резервных копий нет!",
+  "backups.none2": "Знаешь, всегда лучше иметь план отступления",
+  "backups.task.creating": "Создаём копию...",
+  "backups.task.copying": "Копируем данные...",
+  "backups.task.saving": "Сохраняем данные...",
+  
+  "versions.name": "Версии",
+  
+  "settings.name": "Настройки"
+}
