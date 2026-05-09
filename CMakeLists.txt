@@ -154,6 +154,7 @@ target_link_libraries(j3 PRIVATE
         dxgi
         d3dcompiler
         dwmapi
+        WindowsApp.lib
 )
 
 target_compile_definitions(j3 PRIVATE UNICODE)
